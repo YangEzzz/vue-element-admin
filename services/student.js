@@ -1,6 +1,4 @@
-const db = require("../db");
-
-
+const db = require('../db')
 
 // function exists(book) {
 //   const { title, author, publisher } = book
@@ -8,11 +6,11 @@ const db = require("../db");
 //   return db.queryOne(sql)
 // }
 
-async function getCategory(){
-  const sql='select * from category order by StudentId asc'
+async function getCategory() {
+  const sql = 'select * from category order by StudentId asc'
   const result = await db.querySql(sql)
-  const categoryList=[]
-  result.forEach(item=>{
+  const categoryList = []
+  result.forEach(item => {
     categoryList.push({
       label: item.Name,
       value: item.value,
@@ -22,6 +20,6 @@ async function getCategory(){
   return categoryList
 }
 
-module.exports={
+module.exports = {
   getCategory
 }

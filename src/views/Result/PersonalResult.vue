@@ -21,23 +21,23 @@
         @clear="handleFilter"
         @blur="handleFilter"
       />
-<!--      <el-select-->
-<!--        v-model="listQuery.category"-->
-<!--        placeholder="班级"-->
-<!--        clearable-->
-<!--        class="filter-item"-->
-<!--        @change="handleFilter"-->
-<!--      >-->
-<!--        <el-option-->
-<!--          v-for="item in categoryList"-->
-<!--          :key="item.value"-->
-<!--          :label="item.label"-->
-<!--          :value="item.value"-->
-<!--        />-->
-<!--        <el-option value="1">11</el-option>-->
-<!--        <el-option value="2">22</el-option>-->
-<!--        <el-option value="3">33</el-option>-->
-<!--      </el-select>-->
+      <!--      <el-select-->
+      <!--        v-model="listQuery.category"-->
+      <!--        placeholder="班级"-->
+      <!--        clearable-->
+      <!--        class="filter-item"-->
+      <!--        @change="handleFilter"-->
+      <!--      >-->
+      <!--        <el-option-->
+      <!--          v-for="item in categoryList"-->
+      <!--          :key="item.value"-->
+      <!--          :label="item.label"-->
+      <!--          :value="item.value"-->
+      <!--        />-->
+      <!--        <el-option value="1">11</el-option>-->
+      <!--        <el-option value="2">22</el-option>-->
+      <!--        <el-option value="3">33</el-option>-->
+      <!--      </el-select>-->
       <el-select
         v-model="listQuery.category"
         placeholder="分类"
@@ -54,7 +54,6 @@
         icon="el-icon-search"
         style="margin-left: 10px"
         @click="handleFilter"
-
       >
         查询
       </el-button>
@@ -76,32 +75,31 @@
         显示座号
       </el-checkbox>
     </div>
-    <el-table/>
+    <el-table />
     <pagination
-     :total="0"
+      :total="0"
     />
   </div>
 </template>
 
 <script>
 import Pagination from '../../components/Pagination/index'
-import waves from "@/directive/waves/waves";
-import {getCategory} from "@/api/student";
+import waves from '@/directive/waves/waves'
+import { getCategory } from '@/api/student'
 
 export default {
   components: { Pagination },
-  directives: {waves},
+  directives: { waves },
   data() {
     return {
       listQuery: {},
-      showNumber:false,
-      categoryList:[]
+      showNumber: false,
+      categoryList: []
     }
   },
   mounted() {
     this.getCategoryList()
-  }
-  ,
+  },
   methods: {
     getCategoryList() {
       getCategory().then(response => {
@@ -115,7 +113,8 @@ export default {
       this.$router.push('/changeResult/change')
     },
     changeShowNumber() {
-      this.showNumber=value
+      // eslint-disable-next-line no-undef
+      this.showNumber = value
     }
   }
 }

@@ -47,7 +47,7 @@ export const constantRoutes = [
         path: 'dashboard',
         component: () => import('@/views/dashboard/index'),
         name: 'Dashboard',
-        meta: { title: '首页', icon: 'guide', affix: true,  }
+        meta: { title: '首页', icon: 'guide', affix: true }
       }
     ]
   }
@@ -70,6 +70,7 @@ export const asyncRoutes = [
         name: '个人成绩',
         path: '/Result/PersonalResult',
         component: () => import('@/views/Result/PersonalResult'),
+        // eslint-disable-next-line no-sequences
         meta: { title: '个人成绩', icon: 'documentation', roles: (['admin'], ['editor']) }
       }
     ]
@@ -79,18 +80,21 @@ export const asyncRoutes = [
     component: Layout,
     name: '平均成绩',
     redirect: '/AdvangeResult',
+    // eslint-disable-next-line no-sequences
     meta: { title: '平均成绩', icon: 'documentation', roles: (['admin'], ['editor']) },
     children: [
       {
         name: '班级平均成绩',
         path: '/AdvangeResult/ClassAdv',
         component: () => import('@/views/AdvangeResult/ClassAdv'),
+        // eslint-disable-next-line no-sequences
         meta: { title: '班级平均成绩', icon: 'documentation', roles: (['admin'], ['editor']) }
       },
       {
         name: '全级平均成绩',
         path: '/AdvangeResult/AllAdv',
         component: () => import('@/views/AdvangeResult/AllAdv'),
+        // eslint-disable-next-line no-sequences
         meta: { title: '全级平均成绩', icon: 'documentation', roles: (['admin'], ['editor']) }
       }
     ]
@@ -100,18 +104,21 @@ export const asyncRoutes = [
     component: Layout,
     redirect: '/Rank',
     name: '排名',
+    // eslint-disable-next-line no-sequences
     meta: { title: '成绩排名', icon: 'documentation', roles: (['admin'], ['editor']) },
     children: [
       {
         name: '班级排名',
         path: '/Rank/ClassRank',
         component: () => import('@/views/rank/ClassRank'),
+        // eslint-disable-next-line no-sequences
         meta: { title: '班级排名', icon: 'documentation', roles: (['admin'], ['editor']) }
       },
       {
         name: '全级排名',
         path: '/Rank/AllRank',
         component: () => import('@/views/rank/AllRank'),
+        // eslint-disable-next-line no-sequences
         meta: { title: '全级排名', icon: 'documentation', roles: (['admin'], ['editor']) }
       }
     ]
@@ -121,24 +128,28 @@ export const asyncRoutes = [
     component: Layout,
     name: '统计',
     redirect: '/statistics',
+    // eslint-disable-next-line no-sequences
     meta: { title: '统计', icon: 'documentation', roles: (['admin'], ['editor']) },
     children: [
       {
         name: '优秀率',
         path: '/statistics/ExcellentRate',
         component: () => import('@/views/statistics/ExcellentRate'),
+        // eslint-disable-next-line no-sequences
         meta: { title: '优秀率', icon: 'documentation', roles: (['admin'], ['editor']) }
       },
       {
         name: '及格率',
         path: '/statistics/PassRate',
         component: () => import('@/views/statistics/PassRate'),
+        // eslint-disable-next-line no-sequences
         meta: { title: '及格率', icon: 'documentation', roles: (['admin'], ['editor']) }
       },
       {
         name: '不及格人数',
         path: '/statistics/FailNum',
         component: () => import('@/views/statistics/FailNum'),
+        // eslint-disable-next-line no-sequences
         meta: { title: '不及格人数', icon: 'documentation', roles: (['admin'], ['editor']) }
       }
     ]
@@ -152,7 +163,8 @@ export const asyncRoutes = [
         name: '分数段条形图',
         path: '/Result/chart',
         component: () => import('@/views/Result/chart'),
-        meta: { title: '分数段条形图', icon: 'chart', roles: (['admin'],['editor']) }
+        // eslint-disable-next-line no-sequences
+        meta: { title: '分数段条形图', icon: 'chart', roles: (['admin'], ['editor']) }
       }
     ]
   },
@@ -161,12 +173,19 @@ export const asyncRoutes = [
     component: Layout,
     name: '修改成绩',
     redirect: '/changeResult',
+    meta: { title: '修改上传成绩信息', icon: 'list', roles: ['admin'] },
     children: [
       {
         name: '修改班级成绩',
         path: '/changeResult/change',
         component: () => import('@/views/changeResult/change'),
-        meta: { title: '修改/上传成绩信息', icon: 'edit', roles: ['admin'] }
+        meta: { title: '修改成绩信息', icon: 'edit', roles: ['admin'] }
+      },
+      {
+        name: '上传班级成绩',
+        path: '/changeResult/create',
+        component: () => import('@/views/changeResult/create'),
+        meta: { title: '上传班级成绩', icon: 'edit' }
       }
     ]
   },

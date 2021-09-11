@@ -3,6 +3,7 @@ const boom = require('boom')
 const userRouter = require('./user')
 const jwtAuth = require('./jwt')
 const Result = require('../models/Result')
+const studentRouter = require('./student')
 // 注册路由
 const router = express.Router()
 
@@ -14,6 +15,7 @@ router.get('/', function(req, res) {
 // 通过 userRouter 来处理 /user 路由，对路由处理进行解耦
 router.use('/user', userRouter)
 
+router.use('/student', studentRouter)
 /**
  * 集中处理404请求的中间件
  * 注意：该中间件必须放在正常处理流程之后

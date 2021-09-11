@@ -36,6 +36,7 @@
     "jsonlint": "1.6.3",
     "jsonwebtoken": "^8.5.1",
     "jszip": "3.2.1",
+    "multer": "^1.4.3",
     "mysql": "^2.18.1",
     "normalize.css": "7.0.0",
     "nprogress": "0.2.0",

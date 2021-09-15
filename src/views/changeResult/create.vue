@@ -1,6 +1,6 @@
 <template>
   <div>
-    <detail>{{ isEdit }}</detail>
+    <detail :is-edit="false" />
   </div>
 </template>
 

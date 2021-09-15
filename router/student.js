@@ -4,16 +4,20 @@ const studentService = require('../services/student')
 const boom = require('boom')
 const { UPLOAD_PATH } = require('../utils/constant')
 const multer = require('multer')
+const Student = require('../models/Student')
 
 const router = express.Router()
 
-router.post('/upload', multer({ dest: `${UPLOAD_PATH}/student` }).single('file'), function(req, res, next) {
-  if (!req.file || req.file.length === 0) {
-    new Result('上传表格失败').fail(res)
-  } else {
-    new Result('上传表格成功').success(res)
-  }
-})
+router.post('/upload',
+  multer({ dest: `${UPLOAD_PATH}/student` }).single('file'), function(req, res, next) {
+    if (!req.file || req.file.length === 0) {
+      new Result('上传表格失败').fail(res)
+    } else {
+      // eslint-disable-next-line no-unused-vars
+      const student = new Student(req.file)
+      new Result('上传表格成功').success(res)
+    }
+  })
 
 router.get('/category', function(req, res, next) {
   studentService.getCategory().then(category => {

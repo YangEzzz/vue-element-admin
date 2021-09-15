@@ -15,7 +15,12 @@
       <el-row>
         <Warning />
         <el-col :span="24">
-          <ExcelUpload />
+          <ExcelUpload
+            :file-list="fileList"
+            :disabled="isEdit"
+            @onSuccess="onUploadSuccess"
+            @onRemove="onUploadRemove"
+          />
         </el-col>
         <el-col :span="24" />
       </el-row>
@@ -34,13 +39,21 @@ export default {
   },
   data() {
     return {
-      loading: false
-      // postForm: {
-      //   status: ' deleted'
-      // }
+      // eslint-disable-next-line no-undef
+      disabled,
+      loading: false,
+      postForm: {
+      },
+      fileList: []
     }
   },
   methods: {
+    onUploadSuccess() {
+      console.log('onUploadSuccess')
+    },
+    onUploadRemove() {
+      console.log('onUploadRemove')
+    },
     showGuide() {
       console.log('show guide')
     },

@@ -29,7 +29,7 @@
       <i class="el-icon-upload" />
       <div v-if="fileList.length === 0" class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
       <div v-else class="el-upload__text">图书已上传</div>
-      <div slot="tip" class="el-upload__tip">只能上传xlsx或xls文件</div>
+      <div slot="tip" class="el-upload__tip">只能上传xlsx文件</div>
     </el-upload>
   </div>
 </template>
@@ -68,13 +68,13 @@ export default {
     },
     onSuccess(response, file) {
       // console.log(response, file)
-      const { code, msg } = response
+      const { code, msg, data } = response
       if (code === 0) {
         this.$message({
           message: msg,
           type: 'success'
         })
-        this.$emit('onSuccess', file)
+        this.$emit('onSuccess', data)
       } else {
         this.$message({
           message: (msg && `上传失败，失败原因：${msg}`) || '上传失败',

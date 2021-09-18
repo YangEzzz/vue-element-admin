@@ -15,7 +15,14 @@ router.post('/upload',
     } else {
       // eslint-disable-next-line no-unused-vars
       const student = new Student(req.file)
-      new Result('上传表格成功').success(res)
+      student.parse()
+        .then(student => {
+          new Result(student, '上传表格成功').success(res)
+        }).catch(err => {
+          console.log('/student/upload', err)
+          next(boom.badImplementation(err))
+          student.reset()
+        })
     }
   })
 

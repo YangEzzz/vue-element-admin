@@ -1,9 +1,9 @@
 <template>
   <div>
-    <div class="roletext1">
-      <span style="line-height: 150px" v-for="item in roles" :key="item" class="pan-info-roles">你的角色是：{{ item }}</span>
+    <div class="roleText1">
+      <span v-for="item in roles" :key="item" style="line-height: 150px" class="pan-info-roles">你的角色是：{{ item }}</span>
     </div>
-    <div class="roletext2">
+    <div class="roleText2">
       <span style="line-height: 150px">功能介绍</span>
     </div>
   </div>
@@ -34,7 +34,7 @@
 import { mapGetters } from 'vuex'
 import PanThumb from '@/components/PanThumb'
 import GithubCorner from '@/components/GithubCorner'
-
+/*eslint-disable*/
 export default {
   name: 'DashboardEditor',
   components: { PanThumb, GithubCorner },
@@ -54,7 +54,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .roletext1 {
+  .roleText1 {
     border: #8887 outset 3px ;
     border-radius: 5px;
     text-align: center;
@@ -64,11 +64,11 @@ export default {
     height: 150px;
     width: 200px;
   }
-  .roletext1:hover {
+  .roleText1:hover {
     box-shadow: 6px 6px 5px #8888;
   }
 
-  .roletext2 {
+  .roleText2 {
     border: #8887 outset 3px ;
     border-radius: 5px;
     text-align: center;
@@ -78,7 +78,7 @@ export default {
     height: 150px;
     width: 200px;
   }
-  .roletext2:hover {
+  .roleText2:hover {
     box-shadow: 6px 6px 5px #8888;
   }
 

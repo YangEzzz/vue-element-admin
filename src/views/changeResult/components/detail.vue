@@ -27,7 +27,7 @@
         </el-row>
         <div class="foresee">表格预览</div>
         <el-table :data="tableObject" border highlight-current-row style="width: 100%;margin-top:0px">
-          <el-table-column v-for="item in tableHeader" :key="item" :prop="item" :label="item" sortable="custom" align="center" :render-header="labelHead" />
+          <el-table-column v-for="item in tableHeader" :key="item" :prop="item" :label="item" align="center" :render-header="labelHead" />
         </el-table>
       </div>
     </el-form>

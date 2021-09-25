@@ -49,17 +49,31 @@ function queryOne(sql){
   })
 }
 
-function insert(model, tablename){
+let isObject = (value) => {
+  return value != null && (typeof value == 'object' || typeof value == 'function')
+}
+
+function insert(model, tableName){
+  const modelData=model.data
+  // console.log('md',modelData)
   return new Promise((resolve, reject) => {
-    if (!isObject(model)) {
+    if (!(modelData instanceof Array) || modelData.length===0) {
       reject(new Error('插入数据库失败，插入数据非对象'))
     } else {
       const keys = []
       const values = []
-      Object.keys(model).forEach(key => {
-        if (model.hasOwnProperty(key)) {
+      // for(let item of modelData){
+      //   Object.keys(item).forEach(key => {
+      //     if (item.hasOwnProperty(key)) {
+      //       keys.push(`\`${key}\``)
+      //       values.push(`'${model[key]}'`)
+      //     }
+      //   })
+      // }
+      Object.keys(modelData[0]).forEach(key => {
+        if (modelData[0].hasOwnProperty(key)) {
           keys.push(`\`${key}\``)
-          values.push(`'${model[key]}'`)
+          values.push(`'${modelData[0][key]}'`)
         }
       })
       if (keys.length > 0 && values.length > 0) {
@@ -67,6 +81,7 @@ function insert(model, tablename){
         const keysString = keys.join(',')
         const valuesString = values.join(',')
         sql = `${sql}${keysString}) VALUES (${valuesString})`
+        debug && console.log(sql)
         const conn = connect()
         try {
           conn.query(sql, (err, result) => {

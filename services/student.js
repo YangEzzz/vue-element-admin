@@ -9,8 +9,8 @@ async function insertStudent(student) {
   return new Promise((resolve, reject) => {
     try {
       if (student instanceof Student) {
-        console.log('test3', Object.values(student.data[0]))
-        db.insert(student, 'result')
+        // console.log('test3', Object.values(student.data[0]))
+        db.insert(student, 'result1')
       } else {
         reject(new Error('添加的表格不合法'))
       }

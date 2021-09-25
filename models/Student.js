@@ -35,9 +35,7 @@ class Student {
 
   createStudentFromData(data) {
     this.data=data
-    this.createUser=data.username
-    this.createDt=new Date().getTime()
-    this.updateDt=new Date().getTime()
+
     //   this[i].StudentId=item.StudentId
     //   this.Grade=data.Grade
     //   this.Class=data.Class

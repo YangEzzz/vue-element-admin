@@ -5,7 +5,7 @@ const boom = require('boom')
 const { UPLOAD_PATH } = require('../utils/constant')
 const multer = require('multer')
 const Student = require('../models/Student')
-const { decoded } = require('../utils')
+// const { decoded } = require('../utils')
 
 const router = express.Router()
 
@@ -29,10 +29,10 @@ router.post('/upload',
 
 router.post('/create', function(req, res, next) {
   // console.log('test', req.body)
-  const decode = decoded(req)
-  if (decode && decode.username) {
-    req.body.username = decode.username
-  }
+  // const decode = decoded(req)
+  // if (decode && decode.username) {
+  //   req.body.username = decode.username
+  // }
   const student = new Student(null, req.body)
   console.log('student')
   studentService.insertStudent(student).then(() => {

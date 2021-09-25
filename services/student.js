@@ -1,11 +1,24 @@
 const db = require('../db')
-
+const Student = require('../models/Student')
 // function exists(book) {
 //   const { title, author, publisher } = book
 //   const sql = `select * from book where title='${title}' and author='${author}' and publisher='${publisher}'`
 //   return db.queryOne(sql)
 // }
-
+async function insertStudent(student) {
+  return new Promise((resolve, reject) => {
+    try {
+      if (student instanceof Student) {
+        console.log('test3', Object.values(student.data[0]))
+        db.insert(student, 'result')
+      } else {
+        reject(new Error('添加的表格不合法'))
+      }
+    } catch (e) {
+      reject(e)
+    }
+  })
+}
 async function getCategory() {
   const sql = 'select distinct Class from category'
   const result = await db.querySql(sql)
@@ -57,5 +70,6 @@ async function listStudent(query) {
 
 module.exports = {
   getCategory,
-  listStudent
+  listStudent,
+  insertStudent
 }

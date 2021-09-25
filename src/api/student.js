@@ -14,3 +14,11 @@ export function listStudent(params) {
     params
   })
 }
+
+export function createStudent(student) {
+  return request({
+    url: '/student/create',
+    method: 'post',
+    data: student
+  })
+}

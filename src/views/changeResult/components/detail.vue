@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-form>
+    <el-form ref="postform" :model="postform">
       <sticky :class-name="'sub-navbar'">
         <el-button v-if="!isEdit" @click="showGuide">显示帮助</el-button>
         <el-button
@@ -39,6 +39,7 @@
 import Sticky from '@/components/Sticky'
 import Warning from '@/views/changeResult/components/Warning'
 import ExcelUpload from '@/../src/components/ExcelUpload/index'
+import { createStudent } from '@/api/student'
 export default {
   components: { Warning, Sticky, ExcelUpload },
   props: {
@@ -86,18 +87,24 @@ export default {
       this.tableObject = Object.values(data.tableData)
       console.log('onUploadSuccess', this.tableObject instanceof Array, this.tableObject)
     },
+    setDefault() {
+      this.tableObject = []
+      this.tableHeader = []
+    },
     onUploadRemove() {
-      console.log('onUploadRemove')
+      this.setDefault()
     },
     showGuide() {
       console.log('show guide')
     },
     submitForm() {
       this.loading = true
-      setTimeout(() => {
-        this.loading = false
-      }, 1000)
-      console.log('wwww')
+      const student = this.tableObject
+      if (!this.isEdit) {
+        createStudent(student)
+      } else {
+        // update(student)
+      }
     }
   }
 }

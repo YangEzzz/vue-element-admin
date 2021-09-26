@@ -49,10 +49,6 @@ function queryOne(sql){
   })
 }
 
-let isObject = (value) => {
-  return value != null && (typeof value == 'object' || typeof value == 'function')
-}
-
 function insert(model, tableName){
   const modelData=model.data
   // console.log('md',modelData)
@@ -62,26 +58,40 @@ function insert(model, tableName){
     } else {
       const keys = []
       const values = []
-      // for(let item of modelData){
-      //   Object.keys(item).forEach(key => {
-      //     if (item.hasOwnProperty(key)) {
-      //       keys.push(`\`${key}\``)
-      //       values.push(`'${model[key]}'`)
-      //     }
-      //   })
-      // }
+
       Object.keys(modelData[0]).forEach(key => {
-        if (modelData[0].hasOwnProperty(key)) {
+        if (modelData[0].hasOwnProperty(key)&&key!=='Grade'&&key!=='Class'&&key!=='Name') {
           keys.push(`\`${key}\``)
-          values.push(`'${modelData[0][key]}'`)
+          if(modelData[0][key]==="")
+            values.push("null")
+          else {
+            values.push(`'${modelData[0][key]}'`)
+          }
         }
       })
-      if (keys.length > 0 && values.length > 0) {
-        let sql = `INSERT INTO \`${tableName}\`(`
-        const keysString = keys.join(',')
-        const valuesString = values.join(',')
-        sql = `${sql}${keysString}) VALUES (${valuesString})`
-        debug && console.log(sql)
+
+      let sql = `INSERT INTO \`${tableName}\`(`
+      const keysString = keys.join(',')
+      const valuesString = values.join(',')
+      sql = `${sql}${keysString}) VALUES (${valuesString})`// 插入表头，顺带插入第一行值
+
+      if (keys.length > 0 && values.length > 0) {// 插入剩下的值
+        for(let i=1;i<modelData.length;i++){
+          let value=[]
+          let valuesString=[]
+          Object.keys(modelData[i]).forEach(key => {
+            if (modelData[i].hasOwnProperty(key)&&key!=='Grade'&&key!=='Class'&&key!=='Name') {
+              if(modelData[i][key]==="")
+                value.push("null")
+              else {
+                value.push(`'${modelData[i][key]}'`)
+                valuesString = value.join(',')
+              }
+            }
+          })
+          sql = `${sql},(${valuesString})`
+        }
+        // debug && console.log(sql)测试sql语句
         const conn = connect()
         try {
           conn.query(sql, (err, result) => {

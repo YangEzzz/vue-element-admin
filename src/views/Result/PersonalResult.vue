@@ -220,6 +220,20 @@
           <span>{{ TestTime }}</span>
         </template>
       </el-table-column>
+      <el-table-column
+        label="操作"
+        align="center"
+        width="50"
+        fixed="right"
+      >
+        <template slot-scope="{ row }">
+          <el-button
+            type="text"
+            icon="el-icon-edit"
+            @click="handleUpdate(row)"
+          />
+        </template>
+      </el-table-column>
     </el-table>
     <pagination
       v-show="total>0"
@@ -312,7 +326,20 @@ export default {
       this.getList()
     },
     handleCreate() {
-      this.$router.push('/changeResult/change')
+      this.$router.push('/changeResult/create')
+    },
+    handleUpdate(row) {
+      const getKeyFromValue = (object, value) => {
+        for (const ob in object) {
+          // eslint-disable-next-line no-prototype-builtins
+          if (Object.hasOwnProperty(ob)) {
+            if (object[ob] === value) { return ob }
+          }
+        }
+      }
+      const id = getKeyFromValue(row, 'StudentId')
+      console.log('rowTest', id)
+      this.$router.push(`/changeResult/change`)
     },
     changeShowNumber() {
       // eslint-disable-next-line no-undef

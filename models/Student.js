@@ -35,7 +35,6 @@ class Student {
 
   createStudentFromData(data) {
     this.data=data
-
     //   this[i].StudentId=item.StudentId
     //   this.Grade=data.Grade
     //   this.Class=data.Class

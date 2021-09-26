@@ -22,3 +22,11 @@ export function createStudent(student) {
     data: student
   })
 }
+
+export function updateStudent(student) {
+  return request(({
+    url: '/student/update',
+    method: 'post',
+    data: student
+  }))
+}

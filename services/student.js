@@ -5,12 +5,14 @@ const Student = require('../models/Student')
 //   const sql = `select * from book where title='${title}' and author='${author}' and publisher='${publisher}'`
 //   return db.queryOne(sql)
 // }
-async function insertStudent(student) {
-  return new Promise((resolve, reject) => {
+function insertStudent(student) {
+  // eslint-disable-next-line no-async-promise-executor
+  return new Promise(async(resolve, reject) => {
     try {
       if (student instanceof Student) {
         // console.log('test3', Object.values(student.data[0]))
-        db.insert(student, 'result1')
+        await db.insert(student, 'result')
+        resolve()
       } else {
         reject(new Error('添加的表格不合法'))
       }

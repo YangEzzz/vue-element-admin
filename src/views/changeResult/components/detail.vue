@@ -39,7 +39,7 @@
 import Sticky from '@/components/Sticky'
 import Warning from '@/views/changeResult/components/Warning'
 import ExcelUpload from '@/../src/components/ExcelUpload/index'
-import { createStudent } from '@/api/student'
+import { createStudent, updateStudent } from '@/api/student'
 export default {
   components: { Warning, Sticky, ExcelUpload },
   props: {
@@ -71,6 +71,9 @@ export default {
       fileList: []
     }
   },
+  created() {
+    console.log(this.$route.params)
+  },
   methods: {
     labelHead(h, { column, item }) {
       const l = column.label.length
@@ -85,7 +88,7 @@ export default {
       }
       this.tableHeader = data.header
       this.tableObject = Object.values(data.tableData)
-      console.log('onUploadSuccess', this.tableObject instanceof Array, this.tableObject)
+      // console.log('onUploadSuccess', this.tableObject instanceof Array, this.tableObject)
     },
     setDefault() {
       this.tableObject = []
@@ -101,9 +104,22 @@ export default {
       this.loading = true
       const student = this.tableObject
       if (!this.isEdit) {
-        createStudent(student)
+        createStudent(student).then(response => {
+          const { msg } = response
+          this.$notify({
+            title: '操作成功',
+            message: msg,
+            type: 'success',
+            duration: 2000
+          })
+          this.loading = false
+        }).catch(reason => {
+          this.loading = false
+        })
       } else {
-        // update(student)
+        updateStudent(student).then(response => {
+          console.log(response)
+        })
       }
     }
   }

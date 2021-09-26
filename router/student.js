@@ -36,7 +36,7 @@ router.post('/create', function(req, res, next) {
   const student = new Student(null, req.body)
   console.log('student')
   studentService.insertStudent(student).then(() => {
-
+    new Result('添加成绩成功').success(res)
   }).catch(err => {
     next(boom.badImplementation(err))
   })

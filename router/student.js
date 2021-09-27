@@ -49,7 +49,9 @@ router.get('/category', function(req, res, next) {
     next(boom.badImplementation(err))
   })
 })
-router.get('/list', function(req, res, next) {
+router.get('/list', function(
+  req,
+  res, next) {
   studentService.listStudent(req.query)
     .then(({ list, count, page, pageSize }) => {
       new Result({ list, count, page: +page, pageSize: +pageSize }, '获取成绩列表成功').success(res)
@@ -57,4 +59,14 @@ router.get('/list', function(req, res, next) {
       next(boom.badImplementation(err))
     })
 })
+
+router.get('/update', function(
+  req,
+  res, next) {
+  studentService.updateStudent(req.updateKey).then(() => {
+  }).catch(err => {
+    next(boom.badImplementation(err))
+  })
+})
+
 module.exports = router

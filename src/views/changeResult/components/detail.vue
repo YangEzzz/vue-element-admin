@@ -14,7 +14,7 @@
       </sticky>
       <div class="detail-container">
         <el-row>
-          <Warning />
+          <Warning :is-edit="true" />
           <el-col :span="24">
             <ExcelUpload
               :file-list="fileList"
@@ -119,6 +119,9 @@ export default {
       } else {
         updateStudent(student).then(response => {
           console.log(response)
+        }).catch(reason => {
+          this.loading = false
+          console.log(this.isEdit)
         })
       }
     }

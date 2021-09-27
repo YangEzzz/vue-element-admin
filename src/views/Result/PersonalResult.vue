@@ -65,7 +65,7 @@
       border
       fit
       highlight-current-row
-      style="width: 100%;"
+      style="width: 100%"
       @sort-change="sortChange"
     >
       <el-table-column
@@ -329,17 +329,12 @@ export default {
       this.$router.push('/changeResult/create')
     },
     handleUpdate(row) {
-      const getKeyFromValue = (object, value) => {
-        for (const ob in object) {
-          // eslint-disable-next-line no-prototype-builtins
-          if (Object.hasOwnProperty(ob)) {
-            if (object[ob] === value) { return ob }
-          }
-        }
-      }
-      const id = getKeyFromValue(row, 'StudentId')
-      console.log('rowTest', id)
-      this.$router.push(`/changeResult/change`)
+      // const id = Object.entries(row)
+      // console.log('rowTest', id)
+      this.$router.push({
+        path: `/changeResult/change`,
+        params: row
+      })
     },
     changeShowNumber() {
       // eslint-disable-next-line no-undef

@@ -69,9 +69,13 @@ async function listStudent(query) {
   const list = await db.querySql(booksql)
   return { list, count: count[0].count, page, pageSize }
 }
+async function updateStudent(updateKey){
+
+}
 
 module.exports = {
   getCategory,
   listStudent,
-  insertStudent
+  insertStudent,
+  updateStudent
 }

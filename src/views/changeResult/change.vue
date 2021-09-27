@@ -1,11 +1,11 @@
 <template>
   <div>
-    <detail :is-edit="true" />
+    <ChangeDetail :is-edit="true" />
   </div>
 </template>
 <script>
-import Detail from '@/views/changeResult/components/detail'
+import ChangeDetail from '@/views/changeResult/components/ChangeDetail'
 export default {
-  components: { Detail }
+  components: { ChangeDetail }
 }
 </script>

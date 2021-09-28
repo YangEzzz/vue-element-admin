@@ -47,7 +47,7 @@ async function listStudent(query) {
   } = query
   const offset = (page-1)*pageSize
   let booksql = 'select * from studentresult'
-  let where = 'where'
+  let where = 'where Name is not null'
   Name && (where = db.andLike(where, 'Name', Name))
   StudentId && (where = db.and(where, 'StudentId', StudentId))
   category && (where = db.and(where, 'Class', category))
@@ -67,8 +67,19 @@ async function listStudent(query) {
   const count = await db.querySql(countSql)
   booksql = `${booksql} limit ${pageSize} offset ${offset}`
   const list = await db.querySql(booksql)
+  console.log('sqltest',where)
   return { list, count: count[0].count, page, pageSize }
 }
+
+async function chartListStudent(query) {
+  console.log(query)
+  const {
+  } = query
+  let booksql = 'select Chinese,Name,Math from studentresultcharttest where Name is not null'
+  const list = await db.querySql(booksql)
+  return { list }
+}
+
 async function updateStudent(updateKey){
 
 }
@@ -77,5 +88,6 @@ module.exports = {
   getCategory,
   listStudent,
   insertStudent,
-  updateStudent
+  updateStudent,
+  chartListStudent
 }

@@ -60,6 +60,17 @@ router.get('/list', function(
     })
 })
 
+router.get('/chartList', function(
+  req,
+  res, next) {
+  studentService.chartListStudent(req.query)
+    .then(({ list }) => {
+      new Result({ list }, '获取成绩列表成功').success(res)
+    }).catch(err => {
+      next(boom.badImplementation(err))
+    })
+})
+
 router.get('/update', function(
   req,
   res, next) {

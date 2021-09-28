@@ -15,6 +15,14 @@ export function listStudent(params) {
   })
 }
 
+export function chartListStudent(params) {
+  return request({
+    url: '/student/chartList',
+    method: 'get',
+    params
+  })
+}
+
 export function createStudent(student) {
   return request({
     url: '/student/create',

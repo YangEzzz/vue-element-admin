@@ -1,5 +1,5 @@
 module.exports = {
-  title: '小慕读书',
+  title: '成绩可视化系统',
 
   /**
    * @type {boolean} true | false

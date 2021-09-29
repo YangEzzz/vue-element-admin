@@ -75,8 +75,23 @@ async function chartListStudent(query) {
   console.log(query)
   const {
   } = query
-  let booksql = 'select Chinese,Name,Math from studentresultcharttest where Name is not null'
+  let booksql = 'select count(Chinese) as `人数` from studentresult where Chinese between 100 and 150'
   const list = await db.querySql(booksql)
+  booksql = 'select count(Chinese) as `人数` from studentresult where Chinese between 90 and 100'
+  list.push((await db.querySql(booksql))[0])
+  booksql = 'select count(Chinese) as `人数` from studentresult where Chinese between 80 and 90'
+  list.push((await db.querySql(booksql))[0])
+  booksql = 'select count(Chinese) as `人数` from studentresult where Chinese between 70 and 80'
+  list.push((await db.querySql(booksql))[0])
+  booksql = 'select count(Chinese) as `人数` from studentresult where Chinese between 60 and 70'
+  list.push((await db.querySql(booksql))[0])
+  booksql = 'select count(Chinese) as `人数` from studentresult where Chinese between 50 and 60'
+  list.push((await db.querySql(booksql))[0])
+  booksql = 'select count(Chinese) as `人数` from studentresult where Chinese between 40 and 50'
+  list.push((await db.querySql(booksql))[0])
+  booksql = 'select count(Chinese) as `人数` from studentresult where Chinese between 0 and 40'
+  list.push((await db.querySql(booksql))[0])
+  console.log('list',list)
   return { list }
 }
 

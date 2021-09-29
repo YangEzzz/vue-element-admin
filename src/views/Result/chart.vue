@@ -13,7 +13,7 @@ export default {
     return {
       list: [],
       chartData: {
-        columns: ['Name', 'Chinese', 'Math'],
+        columns: ['分数段', '人数'],
         rows: []
         // [
         //   { '成绩': 123, '日期': '1月1日' },
@@ -43,6 +43,15 @@ export default {
     getList() {
       chartListStudent(this.listQuery).then(response => {
         const { list } = response.data
+        console.log(list)
+        list[0]['分数段'] = '100以上'
+        list[1]['分数段'] = '90-100'
+        list[2]['分数段'] = '80-90'
+        list[3]['分数段'] = '70-80'
+        list[4]['分数段'] = '60-70'
+        list[5]['分数段'] = '50-60'
+        list[6]['分数段'] = '40-50'
+        list[7]['分数段'] = '0-40'
         this.chartData.rows = list
         console.log(this.chartData.rows)
       })

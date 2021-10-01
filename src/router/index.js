@@ -41,10 +41,10 @@ export const constantRoutes = [
   {
     path: '/',
     component: Layout,
-    redirect: '/dashboard',
+    redirect: '/home',
     children: [
       {
-        path: 'dashboard',
+        path: 'home',
         component: () => import('@/views/dashboard/index'),
         name: '首页',
         meta: { title: '首页', icon: 'guide', affix: true }
@@ -63,7 +63,7 @@ export const asyncRoutes = [
   {
     path: '/Result',
     component: Layout,
-    name: '个人成绩',
+    name: '成绩',
     redirect: '/Result/create',
     children: [
       {
@@ -155,14 +155,14 @@ export const asyncRoutes = [
     ]
   },
   {
-    path: '/Result',
+    path: '/Charts',
     component: Layout,
-    redirect: '/Result/chart',
+    redirect: '/Charts/chart',
     children: [
       {
         name: '分数段条形图',
-        path: '/Result/chart',
-        component: () => import('@/views/Result/chart'),
+        path: '/Charts/chart',
+        component: () => import('@/views/Charts/chart'),
         // eslint-disable-next-line no-sequences
         meta: { title: '分数段条形图', icon: 'chart', roles: (['admin'], ['editor']) }
       }

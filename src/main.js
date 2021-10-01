@@ -18,7 +18,7 @@ import './permission' // permission control
 import './utils/error-log' // error log
 
 import * as filters from './filters' // global filters
-import * as Echarts from 'echarts'
+import Echarts from 'echarts'
 import * as VueECharts from 'vue-echarts'
 import * as VELine from 'v-charts/lib/line.common'
 import * as VEBar from 'v-charts/lib/bar.common'

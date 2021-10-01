@@ -2,6 +2,7 @@
   <div>
     <ve-histogram
       :data="chartData"
+      :settings="this.chartSetting"
     />
   </div>
 </template>
@@ -10,10 +11,14 @@ import { chartListStudent } from '@/api/student'
 
 export default {
   data() {
+    this.chartSetting = {
+      yAxisName: ['人数'],
+      xAxisName: ['分数段']
+    }
     return {
       list: [],
       chartData: {
-        columns: ['分数段', '人数'],
+        columns: ['分数段', '语文', '数学', '英语', '物理', '化学', '历史', '道法', '生物', '地理'],
         rows: []
         // [
         //   { '成绩': 123, '日期': '1月1日' },
@@ -42,8 +47,8 @@ export default {
   methods: {
     getList() {
       chartListStudent(this.listQuery).then(response => {
+        console.log(response.data)
         const { list } = response.data
-        console.log(list)
         list[0]['分数段'] = '100以上'
         list[1]['分数段'] = '90-100'
         list[2]['分数段'] = '80-90'
@@ -53,7 +58,7 @@ export default {
         list[6]['分数段'] = '40-50'
         list[7]['分数段'] = '0-40'
         this.chartData.rows = list
-        console.log(this.chartData.rows)
+        console.log(list)
       })
     }
   }

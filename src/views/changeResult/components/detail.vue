@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-form ref="postform" :model="postform">
+    <el-form>
       <sticky :class-name="'sub-navbar'">
         <el-button v-if="!isEdit" @click="showGuide">显示帮助</el-button>
         <el-button
@@ -9,7 +9,7 @@
           style="margin-left: 10px"
           @click="submitForm"
         >
-          {{ isEdit ? '编辑电子书' : '提交电子书' }}
+          {{ isEdit ? '编辑成绩' : '提交成绩' }}
         </el-button>
       </sticky>
       <div class="detail-container">
@@ -26,7 +26,7 @@
           <el-col :span="24" />
         </el-row>
         <div class="foresee">表格预览</div>
-        <el-table :data="tableObject" border highlight-current-row style="width: 100%;margin-top:0px">
+        <el-table :data="tableObject" border highlight-current-row style="width: 100%;margin-top:0">
           <el-table-column v-for="item in tableHeader" :key="item" :prop="item" :label="item" align="center" :render-header="labelHead" />
         </el-table>
       </div>
@@ -75,7 +75,7 @@ export default {
     console.log(this.$route.params)
   },
   methods: {
-    labelHead(h, { column, item }) {
+    labelHead(h, { column }) {
       const l = column.label.length
       const f = 16 // 每个字大小，其实是每个字的比例值，大概会比字体大小差不多大一点，
       column.minWidth = f * l // 字大小乘个数即长度 ,注意不要加px像素，这里minWidth只是一个比例值，不是真正的长度

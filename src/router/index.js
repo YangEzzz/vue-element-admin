@@ -178,7 +178,7 @@ export const asyncRoutes = [
       {
         name: '修改班级成绩',
         path: '/changeResult/change',
-        param: '',
+        params: '',
         component: () => import('@/views/changeResult/change'),
         meta: { title: '修改成绩信息', icon: 'edit', roles: ['admin'] }
       },

@@ -329,11 +329,9 @@ export default {
       this.$router.push('/changeResult/create')
     },
     handleUpdate(row) {
-      // const id = Object.entries(row)
-      // console.log('rowTest', id)
       this.$router.push({
         path: `/changeResult/change`,
-        params: row
+        query: { Student: row }// path对应query，name对应params
       })
     },
     changeShowNumber() {

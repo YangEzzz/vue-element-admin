@@ -74,7 +74,7 @@ router.get('/chartList', function(
 router.post('/update', function(
   req,
   res, next) {
-  studentService.updateStudent(req.updateKey).then(() => {
+  studentService.updateStudent(req.body).then(() => {
     new Result('修改成绩成功').success(res)
   }).catch(err => {
     next(boom.badImplementation(err))

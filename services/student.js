@@ -97,8 +97,28 @@ async function chartListStudent(query) {
   return { list }
 }
 
-async function updateStudent(updateKey){
-
+function updateStudent(updateKey){
+  const id=updateKey["StudentId"]
+  const Chinese=updateKey["Chinese"]
+  const Math=updateKey["Math"]
+  const English=updateKey["English"]
+  const Physical=updateKey["Physical"]
+  const Chemistry=updateKey["Chemistry"]
+  const History=updateKey["History"]
+  const Politics=updateKey["Politics"]
+  const Biology=updateKey["Biology"]
+  const Geographic=updateKey["Geographic"]
+  const Sport=updateKey["Sport"]
+  const Composite=updateKey["Composite"]
+  console.log(id)
+  let studentSql = `update result set Chinese = ${Chinese}, Math=${Math}, English=${English}, Physical=${Physical}, Chemistry=${Chemistry}, History=${History}, Politics=${Politics}, Biology=${Biology}, Geographic=${Geographic}, Sport=${Sport}, Composite=${Composite} where StudentId = ${id} `
+  console.log(studentSql)
+  return new Promise(async (resolve, reject) => {
+    await db.querySql(studentSql)
+    resolve()
+  }).catch(reason => {
+    reject(reason)
+  })
 }
 
 module.exports = {

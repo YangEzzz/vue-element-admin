@@ -53,7 +53,7 @@ class Result {
   }
 
   jwtError(res) {
-    this.code= CODE_TOKEN_EXPIRED
+    this.code = CODE_TOKEN_EXPIRED
     this.json(res)
   }
 }

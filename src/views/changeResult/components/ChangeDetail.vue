@@ -51,6 +51,7 @@ export default {
   },
   data() {
     return {
+      loading: false,
       updateKey: this.$parent.$route.query.Student
     }
   },
@@ -61,7 +62,17 @@ export default {
       console.log(this.updateKey)
     },
     submitForm() {
-      updateStudent(this.updateKey)
+      this.loading = true
+      updateStudent(this.updateKey).then(response => {
+        const { msg } = response
+        this.$notify({
+          title: '操作成功',
+          message: msg,
+          type: 'success',
+          duration: 1500
+        })
+        this.loading = false
+      })
     },
     showGuide() {
       console.log('showGuide')

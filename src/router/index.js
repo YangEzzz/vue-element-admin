@@ -102,24 +102,14 @@ export const asyncRoutes = [
   {
     path: '/Rank',
     component: Layout,
-    redirect: '/Rank',
-    name: '排名',
-    // eslint-disable-next-line no-sequences
-    meta: { title: '成绩排名', icon: 'documentation', roles: (['admin'], ['editor']) },
+    redirect: '/Rank/AllRank',
     children: [
       {
-        name: '班级排名',
+        name: '成绩排名',
         path: '/Rank/ClassRank',
-        component: () => import('@/views/rank/ClassRank'),
-        // eslint-disable-next-line no-sequences
-        meta: { title: '班级排名', icon: 'documentation', roles: (['admin'], ['editor']) }
-      },
-      {
-        name: '全级排名',
-        path: '/Rank/AllRank',
         component: () => import('@/views/rank/AllRank'),
         // eslint-disable-next-line no-sequences
-        meta: { title: '全级排名', icon: 'documentation', roles: (['admin'], ['editor']) }
+        meta: { title: '成绩排名', icon: 'documentation', roles: (['admin'], ['editor']) }
       }
     ]
   },

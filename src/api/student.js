@@ -15,6 +15,14 @@ export function listStudent(params) {
   })
 }
 
+export function listRankStudent(params) {
+  return request({
+    url: '/student/listRank',
+    method: 'get',
+    params
+  })
+}
+
 export function chartListStudent(params) {
   return request({
     url: '/student/chartList',

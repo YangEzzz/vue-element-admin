@@ -49,10 +49,22 @@ router.get('/category', function(req, res, next) {
     next(boom.badImplementation(err))
   })
 })
+
 router.get('/list', function(
   req,
   res, next) {
   studentService.listStudent(req.query)
+    .then(({ list, count, page, pageSize }) => {
+      new Result({ list, count, page: +page, pageSize: +pageSize }, '获取成绩列表成功').success(res)
+    }).catch(err => {
+      next(boom.badImplementation(err))
+    })
+})
+
+router.get('/listRank', function(
+  req,
+  res, next) {
+  studentService.listRankStudent(req.query)
     .then(({ list, count, page, pageSize }) => {
       new Result({ list, count, page: +page, pageSize: +pageSize }, '获取成绩列表成功').success(res)
     }).catch(err => {

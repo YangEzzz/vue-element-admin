@@ -21,6 +21,7 @@ function insertStudent(student) {
     }
   })
 }
+
 async function getCategory() {
   const sql = 'select distinct Class from category'
   const result = await db.querySql(sql)
@@ -67,7 +68,44 @@ async function listStudent(query) {
   const count = await db.querySql(countSql)
   booksql = `${booksql} limit ${pageSize} offset ${offset}`
   const list = await db.querySql(booksql)
-  console.log('sqlTest',where)
+  console.log('sqlTest',booksql)
+  return { list, count: count[0].count, page, pageSize }
+}
+
+async function listRankStudent(query) {
+  console.log(query)
+  const {
+    subject,
+    category,
+    Name,
+    StudentId,
+    page = 1,
+    pageSize = 20
+  } = query
+  const offset = (page-1)*pageSize
+  let booksql = `select StudentId,Name,Grade,Class,${subject},RANK() over(ORDER BY ${subject} desc) as Ranks FROM studentresult`
+  let where = 'where Name is not null'
+  Name && (where = db.andLike(where, 'Name', Name))
+  StudentId && (where = db.and(where, 'StudentId', StudentId))
+  category && (where = db.and(where, 'Class', category))
+  if (where !== 'where') {
+    booksql = `${booksql} ${where}`
+  }
+  // if (sort) {
+  //   const symbol = sort[0]
+  //   const column = sort.slice(1, sort.length)
+  //   const order = symbol === '+' ? 'asc' : 'desc'
+  //   booksql = `${booksql} order by \`${column}\` ${order}`
+  // }
+  let countSql = `select count(*) as count from studentresult`
+  if (where !== 'where'){
+    countSql = `${countSql} ${where}`
+  }
+  const count = await db.querySql(countSql)
+  booksql = `${booksql} limit ${pageSize} offset ${offset}`
+  const list = await db.querySql(booksql)
+  console.log('sqlTestRank',booksql)
+  // console.log('sqlTestRank',list)
   return { list, count: count[0].count, page, pageSize }
 }
 
@@ -77,20 +115,20 @@ async function chartListStudent(query) {
   } = query
   let range=['100 and 150', '90 and 100', '80 and 90', '70 and 80', '60 and 70', '50 and 60', '40 and 50', '0 and 40']
   let booksql = 'select count(Chinese) as `语文` from studentresult where Chinese between '
-  let studentsql1 = 'SELECT * FROM (( SELECT count( Chinese ) AS `语文` FROM studentresult WHERE Chinese BETWEEN '
-  let studentsql2 = ') AS a1,( SELECT count( Math ) AS `数学` FROM studentresult WHERE Math BETWEEN '
-  let studentsql3=') AS a2,(SELECT count( English ) AS `英语` FROM studentresult WHERE English BETWEEN '
-  let studentsql4=') AS a3,(SELECT count( Physical ) AS `物理` FROM studentresult WHERE Physical BETWEEN '
-  let studentsql5=') AS a4,(SELECT count( Chemistry ) AS `化学` FROM studentresult WHERE Chemistry BETWEEN '
-  let studentsql6=') AS a5,(SELECT count( History ) AS `历史` FROM studentresult WHERE History BETWEEN '
-  let studentsql7=') AS a6,(SELECT count( Politics ) AS `道法` FROM studentresult WHERE Politics BETWEEN '
-  let studentsql8=') AS a7,(SELECT count( Biology ) AS `生物` FROM studentresult WHERE Biology BETWEEN '
-  let studentsql9=') AS a8,(SELECT count( Geographic ) AS `地理` FROM studentresult WHERE Geographic BETWEEN '
-  let studentsql12=') AS a11)'
+  let studentSql1 = 'SELECT * FROM (( SELECT count( Chinese ) AS `语文` FROM studentresult WHERE Chinese BETWEEN '
+  let studentSql2 = ') AS a1,( SELECT count( Math ) AS `数学` FROM studentresult WHERE Math BETWEEN '
+  let studentSql3=') AS a2,(SELECT count( English ) AS `英语` FROM studentresult WHERE English BETWEEN '
+  let studentSql4=') AS a3,(SELECT count( Physical ) AS `物理` FROM studentresult WHERE Physical BETWEEN '
+  let studentSql5=') AS a4,(SELECT count( Chemistry ) AS `化学` FROM studentresult WHERE Chemistry BETWEEN '
+  let studentSql6=') AS a5,(SELECT count( History ) AS `历史` FROM studentresult WHERE History BETWEEN '
+  let studentSql7=') AS a6,(SELECT count( Politics ) AS `道法` FROM studentresult WHERE Politics BETWEEN '
+  let studentSql8=') AS a7,(SELECT count( Biology ) AS `生物` FROM studentresult WHERE Biology BETWEEN '
+  let studentSql9=') AS a8,(SELECT count( Geographic ) AS `地理` FROM studentresult WHERE Geographic BETWEEN '
+  let studentSql12=') AS a11)'
   const list = []
   for(const item of range){
-    let booksqlTotal=`${studentsql1}${item}${studentsql2}${item}${studentsql3}${item}${studentsql4}${item}${studentsql5}${item}${studentsql6}${item}${studentsql7}${item}${studentsql8}${item}${studentsql9}${item}${studentsql12}`
-    console.log('sqltestnight',booksqlTotal)
+    let booksqlTotal=`${studentSql1}${item}${studentSql2}${item}${studentSql3}${item}${studentSql4}${item}${studentSql5}${item}${studentSql6}${item}${studentSql7}${item}${studentSql8}${item}${studentSql9}${item}${studentSql12}`
+    // console.log('sqlTestNight',booksqlTotal)
     list.push((await db.querySql(booksqlTotal))[0])
   }
   console.log('list',list)// list是一个数组，数组中的每一个元素是一个对象，对象里是查询出来的键值对
@@ -110,9 +148,8 @@ function updateStudent(updateKey){
   const Geographic=updateKey["Geographic"]
   const Sport=updateKey["Sport"]
   const Composite=updateKey["Composite"]
-  console.log(id)
   let studentSql = `update result set Chinese = ${Chinese}, Math=${Math}, English=${English}, Physical=${Physical}, Chemistry=${Chemistry}, History=${History}, Politics=${Politics}, Biology=${Biology}, Geographic=${Geographic}, Sport=${Sport}, Composite=${Composite} where StudentId = ${id} `
-  console.log(studentSql)
+  // console.log(studentSql)
   return new Promise(async (resolve, reject) => {
     await db.querySql(studentSql)
     resolve()
@@ -126,7 +163,8 @@ module.exports = {
   listStudent,
   insertStudent,
   updateStudent,
-  chartListStudent
+  chartListStudent,
+  listRankStudent
 }
 //testData
 // booksql = 'select count(Chinese) as `语文` from studentresult where Chinese between 90 and 100'

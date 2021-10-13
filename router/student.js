@@ -77,6 +77,7 @@ router.get('/chartList', function(
   res, next) {
   studentService.chartListStudent(req.query)
     .then(({ list }) => {
+      console.log('req', req.query)
       new Result({ list }, '获取成绩列表成功').success(res)
     }).catch(err => {
       next(boom.badImplementation(err))

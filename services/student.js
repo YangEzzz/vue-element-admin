@@ -73,23 +73,20 @@ async function listStudent(query) {
 }
 
 async function listRankStudent(query) {
-  console.log(query)
+  console.log('qqqqqq',query)
   const {
     subject,
-    category,
-    Name,
-    StudentId,
     page = 1,
     pageSize = 20
   } = query
   const offset = (page-1)*pageSize
-  let booksql = `select StudentId,Name,Grade,Class,${subject},RANK() over(ORDER BY ${subject} desc) as Ranks FROM studentresult`
+  let studentSql = `select StudentId,Name,Grade,Class,${subject},RANK() over(ORDER BY ${subject} desc) as Ranks FROM studentresult`
   let where = 'where Name is not null'
-  Name && (where = db.andLike(where, 'Name', Name))
-  StudentId && (where = db.and(where, 'StudentId', StudentId))
-  category && (where = db.and(where, 'Class', category))
+  // Name && (where = db.andLike(where, 'Name', Name))
+  // StudentId && (where = db.and(where, 'StudentId', StudentId))
+  // category && (where = db.and(where, 'Class', category))
   if (where !== 'where') {
-    booksql = `${booksql} ${where}`
+    studentSql = `${studentSql} ${where}`
   }
   // if (sort) {
   //   const symbol = sort[0]
@@ -102,36 +99,31 @@ async function listRankStudent(query) {
     countSql = `${countSql} ${where}`
   }
   const count = await db.querySql(countSql)
-  booksql = `${booksql} limit ${pageSize} offset ${offset}`
-  const list = await db.querySql(booksql)
-  console.log('sqlTestRank',booksql)
+  studentSql = `${studentSql} limit ${pageSize} offset ${offset}`
+  const list = await db.querySql(studentSql)
+  console.log('sqlTestRank',studentSql)
   // console.log('sqlTestRank',list)
   return { list, count: count[0].count, page, pageSize }
 }
 
 async function chartListStudent(query) {
-  console.log(query)
-  const {
-  } = query
+  const q=Object.keys(query)[0]
+  const subject = query[q]
+  // console.log('11',subject)
   let range=['100 and 150', '90 and 100', '80 and 90', '70 and 80', '60 and 70', '50 and 60', '40 and 50', '0 and 40']
-  let booksql = 'select count(Chinese) as `语文` from studentresult where Chinese between '
-  let studentSql1 = 'SELECT * FROM (( SELECT count( Chinese ) AS `语文` FROM studentresult WHERE Chinese BETWEEN '
-  let studentSql2 = ') AS a1,( SELECT count( Math ) AS `数学` FROM studentresult WHERE Math BETWEEN '
-  let studentSql3=') AS a2,(SELECT count( English ) AS `英语` FROM studentresult WHERE English BETWEEN '
-  let studentSql4=') AS a3,(SELECT count( Physical ) AS `物理` FROM studentresult WHERE Physical BETWEEN '
-  let studentSql5=') AS a4,(SELECT count( Chemistry ) AS `化学` FROM studentresult WHERE Chemistry BETWEEN '
-  let studentSql6=') AS a5,(SELECT count( History ) AS `历史` FROM studentresult WHERE History BETWEEN '
-  let studentSql7=') AS a6,(SELECT count( Politics ) AS `道法` FROM studentresult WHERE Politics BETWEEN '
-  let studentSql8=') AS a7,(SELECT count( Biology ) AS `生物` FROM studentresult WHERE Biology BETWEEN '
-  let studentSql9=') AS a8,(SELECT count( Geographic ) AS `地理` FROM studentresult WHERE Geographic BETWEEN '
-  let studentSql12=') AS a11)'
+  let studentSql1 = `SELECT * FROM (( SELECT count( ${subject} ) AS '一班' FROM studentresult WHERE ${subject} BETWEEN `
+  let studentSql2 = ` and Class=1) AS a1,( SELECT count( ${subject} ) AS '二班' FROM studentresult WHERE ${subject} BETWEEN `
+  let studentSql3=` and Class=2) AS a2,(SELECT count( ${subject} ) AS '三班' FROM studentresult WHERE ${subject} BETWEEN `
+  let studentSql4=` and Class=3) AS a3,(SELECT count( ${subject} ) AS '四班' FROM studentresult WHERE ${subject} BETWEEN `
+  let studentSql5=` and Class=4) AS a4,(SELECT count( ${subject} ) AS '全级' FROM studentresult WHERE ${subject} BETWEEN `
+  let studentSql6=`) AS a5)`
   const list = []
   for(const item of range){
-    let booksqlTotal=`${studentSql1}${item}${studentSql2}${item}${studentSql3}${item}${studentSql4}${item}${studentSql5}${item}${studentSql6}${item}${studentSql7}${item}${studentSql8}${item}${studentSql9}${item}${studentSql12}`
-    // console.log('sqlTestNight',booksqlTotal)
+    let booksqlTotal=`${studentSql1}${item}${studentSql2}${item}${studentSql3}${item}${studentSql4}${item}${studentSql5}${item}${studentSql6}`
+    console.log('sqlTestNight',booksqlTotal)
     list.push((await db.querySql(booksqlTotal))[0])
   }
-  console.log('list',list)// list是一个数组，数组中的每一个元素是一个对象，对象里是查询出来的键值对
+   console.log('list',list)// list是一个数组，数组中的每一个元素是一个对象，对象里是查询出来的键值对
   return { list }
 }
 
@@ -181,3 +173,14 @@ module.exports = {
 // list.push((await db.querySql(booksql))[0])
 // booksql = 'select count(Chinese) as `语文` from studentresult where Chinese between 0 and 40'
 // list.push((await db.querySql(booksql))[0])
+// SELECT * FROM ((SELECT count( Chinese ) AS `一班` FROM studentresult WHERE Chinese BETWEEN 80 and 90 and Class=1) AS a1,(SELECT count( Chinese ) AS `二班` FROM studentresult WHERE Chinese BETWEEN 80 and 90 and Class=2) AS a2,(SELECT count( Chinese ) AS `三班` FROM studentresult WHERE Chinese BETWEEN 80 and 90 and Class=3) AS a3,(SELECT count( Chinese ) AS `四班` FROM studentresult WHERE Chinese BETWEEN 80 and 90 and Class=4) AS a4)
+// let studentSql1 = 'SELECT * FROM (( SELECT count( Chinese ) AS `语文` FROM studentresult WHERE Chinese BETWEEN '
+// let studentSql2 = ') AS a1,( SELECT count( Math ) AS `数学` FROM studentresult WHERE Math BETWEEN '
+// let studentSql3=') AS a2,(SELECT count( English ) AS `英语` FROM studentresult WHERE English BETWEEN '
+// let studentSql4=') AS a3,(SELECT count( Physical ) AS `物理` FROM studentresult WHERE Physical BETWEEN '
+// let studentSql5=') AS a4,(SELECT count( Chemistry ) AS `化学` FROM studentresult WHERE Chemistry BETWEEN '
+// let studentSql6=') AS a5,(SELECT count( History ) AS `历史` FROM studentresult WHERE History BETWEEN '
+// let studentSql7=') AS a6,(SELECT count( Politics ) AS `道法` FROM studentresult WHERE Politics BETWEEN '
+// let studentSql8=') AS a7,(SELECT count( Biology ) AS `生物` FROM studentresult WHERE Biology BETWEEN '
+// let studentSql9=') AS a8,(SELECT count( Geographic ) AS `地理` FROM studentresult WHERE Geographic BETWEEN '
+// let studentSql12=') AS a11)'

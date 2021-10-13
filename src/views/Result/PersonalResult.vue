@@ -322,7 +322,7 @@ export default {
       })
     },
     handleFilter() {
-      console.log('handleFilter', this.listQuery)
+      console.log('handleFilter', this.listQuery.category)
       this.getList()
     },
     handleCreate() {

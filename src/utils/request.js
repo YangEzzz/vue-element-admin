@@ -64,8 +64,8 @@ service.interceptors.response.use(
     }
   },
   error => {
-    console.log({error}) // for debug
-    const {msg}=error.response.data
+    console.log({ error }) // for debug
+    const { msg } = error.response.data
 
     Message({
       message: msg || '请求失败',

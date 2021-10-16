@@ -75,6 +75,7 @@ async function listStudent(query) {
 async function listRankStudent(query) {
   console.log('qqqqqq',query)
   const {
+    category,
     subject,
     page = 1,
     pageSize = 20
@@ -84,7 +85,7 @@ async function listRankStudent(query) {
   let where = 'where Name is not null'
   // Name && (where = db.andLike(where, 'Name', Name))
   // StudentId && (where = db.and(where, 'StudentId', StudentId))
-  // category && (where = db.and(where, 'Class', category))
+   category && (where = db.and(where, 'Class', category))
   if (where !== 'where') {
     studentSql = `${studentSql} ${where}`
   }

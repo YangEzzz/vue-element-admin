@@ -1,19 +1,15 @@
 <template>
-  <div>
+  <div style="text-align: center">
     <el-select
       v-model="subject"
       placeholder="选择科目"
       class="filter-item"
+      style="margin: 20px auto 20px;"
       @change="handleFilter"
     >
       <el-option v-for="item in ChartCategoryList" :key="item.value" :label="item.label" :value="item.value" />
     </el-select>
-    <ve-histogram
-      :data="chartData"
-      :settings="chartSetting"
-      :extend="chartExtend"
-    />
-    <v-chart :options="options" style="width: 600px;height:400px;" />
+    <v-chart :option="options" style="height: 440px;width: 1000px" />
   </div>
 </template>
 <script>
@@ -23,30 +19,49 @@ export default {
   data() {
     return {
       options: {
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'cross',
+            crossStyle: {
+              color: '#999'
+            }
+          }
+        },
         xAxis: {
-          data: ['100以上', '90-100', '80-90', '70-80', '60-70', '50-60', '40-50', '0-40']
+          type: 'category',
+          axisPointer: {
+            type: 'shadow'
+          }
+          // data: ['100以上', '90-100', '80-90', '70-80', '60-70', '50-60', '40-50', '0-40']
         },
         legend: {},
-        yAxis: {},
-        series: {}
-      },
-      chartExtend: {
-        legend: {
-          selected: {
-            '一班': true,
-            '二班': true,
-            '三班': true,
-            '四班': true,
-            '全级': false
+        yAxis: [
+          {
+            type: 'value',
+            name: '人',
+            axisLabel: {
+              formatter: '{value}'
+            }
+          },
+          {
+            type: 'value',
+            splitLine: {
+              show: false
+            },
+            axisLabel: {
+              formatter: '{value}'
+            }
           }
+        ],
+        series: [{ type: 'bar' }, { type: 'bar' }, { type: 'bar' }, { type: 'bar' }, { type: 'line', yAxisIndex: 1 }],
+        dataset: {
+          dimensions: ['分数段', '一班', '二班', '三班', '四班', '全级'],
+          source: []
         }
       },
-      chartSetting: {
-        yAxisName: ['人数'],
-        xAxisName: ['分数段'],
-        showLine: ['全级', 'line']
-      },
       subject: 'Chinese',
+      list: [],
       ChartCategoryList: [{
         value: 'Chinese',
         label: '语文'
@@ -75,40 +90,7 @@ export default {
         value: 'Geographic',
         label: '地理'
       }
-      ],
-      // , {
-      //   value: 'Sport',
-      //   label: '体育'
-      // }, {
-      //   value: 'Composite',
-      //   label: '综合'
-      // }, {
-      //   value: 'Total',
-      //   label: '总分'
-      // }
-      list: [],
-      chartData: {
-        column: ['分数段', '语文', '数学', '英语', '物理', '化学', '历史', '道法', '生物', '地理'],
-        columns: ['分数段', '一班', '二班', '三班', '四班', '全级'],
-        rows: []
-        // [
-        //   { '日期': '1月2日', '成绩': 1223 },
-        //   { '日期': '1月3日', '成绩': 2123 },
-        //   { '日期': '1月4日', '成绩': 4123 },
-        //   { '日期': '1月5日', '成绩': 3123 },
-        //   { '日期': '1月6日', '成绩': 7123 }
-        // ]
-      }
-      // data: {
-      //   xAxis: {
-      //     type: 'category'
-      //   },
-      //   yAxis: {},
-      //   series: [{
-      //     type: 'line',
-      //     data: [100, 200, 300]
-      //   }]
-      // }
+      ]
     }
   },
   mounted() {
@@ -117,26 +99,57 @@ export default {
   methods: {
     getList() {
       chartListStudent(this.subject).then(response => {
-        console.log(response.data)
-        const xName = '分数段'
+        console.log(response)
         const { list } = response.data
-        list[0][xName] = '100以上'
-        list[1][xName] = '90-100'
-        list[2][xName] = '80-90'
-        list[3][xName] = '70-80'
-        list[4][xName] = '60-70'
-        list[5][xName] = '50-60'
-        list[6][xName] = '40-50'
-        list[7][xName] = '0-40'
-        this.chartData.rows = list
-        console.log(list)
-        console.log('subject', this.subject)
+        const Class = ['一班', '二班', '三班', '四班', '全级']
+        const result = ['100以上', '90-100', '80-90', '70-80', '60-70', '50-60', '40-50', '0-40']
+        /*eslint-disable*/
+        for (let i = 0; i < 8; i++) {
+          let source = []
+          source[0] = result[i]
+          for (let j = 0; j < 5; j++) {
+            source[j + 1] = list[i][Class[j]]
+          }
+          // console.log('source', source)
+          this.options.dataset.source.push(source)
+        }
+        // console.log(this.options.dataset.source)
+
+        // console.log('subject', this.subject)
       })
     },
     handleFilter() {
+      this.options.dataset.source.length=0
       this.getList()
-      console.log('subject', this.subject)
+      // console.log('subject', this.subject)
     }
   }
 }
 </script>
+<!--        // list[0][xName] = '100以上'-->
+<!--// list[1][xName] = '90-100'-->
+<!--// list[2][xName] = '80-90'-->
+<!--// list[3][xName] = '70-80'-->
+<!--// list[4][xName] = '60-70'-->
+<!--// list[5][xName] = '50-60'-->
+<!--// list[6][xName] = '40-50'-->
+<!--// list[7][xName] = '0-40'-->
+<!--// this.chartData.rows = list-->
+<!--// this.options.dataset.source.push(list)-->
+<!--// console.log('list', list[0][Class[0]])-->
+<!--chartExtend: {-->
+<!--legend: {-->
+<!--selected: {-->
+<!--'一班': true,-->
+<!--'二班': true,-->
+<!--'三班': true,-->
+<!--'四班': true,-->
+<!--'全级': false-->
+<!--}-->
+<!--}-->
+<!--},-->
+<!--chartSetting: {-->
+<!--yAxisName: ['人数'],-->
+<!--xAxisName: ['分数段'],-->
+<!--showLine: ['全级', 'line']-->
+<!--},-->

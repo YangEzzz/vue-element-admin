@@ -2,11 +2,12 @@
   <div>
     <el-form>
       <sticky :class-name="'sub-navbar'">
-        <el-button v-if="!isEdit" @click="showGuide">显示帮助</el-button>
+        <el-button v-if="!isEdit" @click.prevent.stop="showGuide">显示帮助</el-button>
         <el-button
           v-loading="loading"
           type="success"
           style="margin-left: 10px"
+          class="submit-btn"
           @click="submitForm"
         >
           {{ isEdit ? '编辑成绩' : '提交成绩' }}
@@ -14,7 +15,7 @@
       </sticky>
       <div class="detail-container">
         <el-row>
-          <Warning :is-edit="true" />
+          <Warning :is-edit="true" :is-data="isData" />
           <el-col :span="24">
             <ExcelUpload
               :file-list="fileList"
@@ -26,7 +27,7 @@
           <el-col :span="24" />
         </el-row>
         <div class="foresee">表格预览</div>
-        <el-table :data="tableObject" border highlight-current-row style="width: 100%;margin-top:0">
+        <el-table :data="tableObject" class="form-item" border highlight-current-row style="width: 100%;margin-top:0">
           <el-table-column v-for="item in tableHeader" :key="item" :prop="item" :label="item" align="center" :render-header="labelHead" />
         </el-table>
       </div>
@@ -40,30 +41,35 @@ import Sticky from '@/components/Sticky'
 import Warning from '@/views/changeResult/components/Warning'
 import ExcelUpload from '@/../src/components/ExcelUpload/index'
 import { createStudent, updateStudent } from '@/api/student'
+import Driver from 'driver.js'
+import 'driver.js/dist/driver.min.css'
+import steps from '@/views/changeResult/components/steps'
 export default {
   components: { Warning, Sticky, ExcelUpload },
   props: {
-    isEdit: Boolean
+    isEdit: Boolean,
+    isData: Boolean
   },
   data() {
     return {
-      itemChinese: [
-        '年级',
-        '班级',
-        '座号',
-        '姓名',
-        '语文',
-        '数学',
-        '英语',
-        '物理',
-        '化学',
-        '生物',
-        '地理',
-        '体育',
-        '综合',
-        '总分',
-        '考试次数'
-      ],
+      driver: null,
+      // itemChinese: [
+      //   '年级',
+      //   '班级',
+      //   '座号',
+      //   '姓名',
+      //   '语文',
+      //   '数学',
+      //   '英语',
+      //   '物理',
+      //   '化学',
+      //   '生物',
+      //   '地理',
+      //   '体育',
+      //   '综合',
+      //   '总分',
+      //   '考试次数'
+      // ],
       disabled: '',
       loading: false,
       tableObject: [],
@@ -73,6 +79,14 @@ export default {
   },
   created() {
     console.log(this.$route.params)
+  },
+  mounted() {
+    this.driver = new Driver({
+      nextBtnText: '下一个',
+      prevBtnText: '上一个',
+      closeBtnText: '关闭',
+      doneBtnText: '完成'
+    })
   },
   methods: {
     labelHead(h, { column }) {
@@ -98,7 +112,8 @@ export default {
       this.setDefault()
     },
     showGuide() {
-      console.log('show guide')
+      this.driver.defineSteps(steps)
+      this.driver.start()
     },
     submitForm() {
       this.loading = true

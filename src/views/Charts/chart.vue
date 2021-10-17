@@ -9,15 +9,22 @@
     >
       <el-option v-for="item in ChartCategoryList" :key="item.value" :label="item.label" :value="item.value" />
     </el-select>
-    <v-chart :option="options" style="height: 440px;width: 1000px" />
+    <v-chart :option="options" style="height: 440px;width: 100%;margin: auto" autoresize :loading="load" />
   </div>
 </template>
+<style>
+body {
+  overscroll-behavior-x: auto;
+}
+</style>
 <script>
 import { chartListStudent } from '@/api/student'
 
 export default {
   data() {
     return {
+      myCharts: {},
+      load: true,
       options: {
         tooltip: {
           trigger: 'axis',
@@ -113,14 +120,16 @@ export default {
           // console.log('source', source)
           this.options.dataset.source.push(source)
         }
+        this.load=false
         // console.log(this.options.dataset.source)
-
         // console.log('subject', this.subject)
       })
     },
     handleFilter() {
       this.options.dataset.source.length=0
       this.getList()
+      this.load = false
+      this.echarts.loading=true
       // console.log('subject', this.subject)
     }
   }

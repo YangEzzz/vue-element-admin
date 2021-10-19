@@ -3,7 +3,7 @@
     <div class="login_box">
       <!-- 头像区域 -->
       <div class="avator_box">
-        <img src="../../assets/login_head.jpg">
+        <img src="../../assets/login_head.jpg" alt="">
       </div>
       <!-- 登录器区域 -->
       <div class="login_form">
@@ -95,6 +95,8 @@ export default {
       loginForm: {
         username: 'admin',
         password: '111111'
+        // username: 'yang',
+        // password: 'youlian'
       },
       loginRules: {
         username: [{ required: true, trigger: 'change', validator: validateUsername }],
@@ -264,9 +266,9 @@ $cursor: #fff;
 
     input {
       background: transparent;
-      border: 0px;
+      border: 0;
       -webkit-appearance: none;
-      border-radius: 0px;
+      border-radius: 0;
       padding: 12px 5px 12px 15px;
       color: $light_gray;
       height: 47px;
@@ -336,7 +338,7 @@ $light_gray:#eee;
     .title {
       font-size: 26px;
       color: $light_gray;
-      margin: 0px auto 40px auto;
+      margin: 0 auto 40px auto;
       text-align: center;
       font-weight: bold;
     }

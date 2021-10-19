@@ -94,6 +94,32 @@ class Student {
     })
 
   }
+
+  reset() {
+    if (this.path && Student.pathExists(this.path)) {
+      fs.unlinkSync(Student.genPath(this.path))
+    }
+    if (this.filePath && Student.pathExists(this.filePath)) {
+      fs.unlinkSync(Student.genPath(this.filePath))
+    }
+  }
+
+  static genPath(path) {
+    if (path.startsWith('/')) {
+      return `${UPLOAD_PATH}${path}`
+    } else {
+      return `${UPLOAD_PATH}/${path}`
+    }
+  }
+
+  static pathExists(path) {
+    if (path.startsWith(UPLOAD_PATH)) {
+      return fs.existsSync(path)
+    } else {
+      return fs.existsSync(Student.genPath(path))
+    }
+  }
+
 }
 
 module.exports = Student

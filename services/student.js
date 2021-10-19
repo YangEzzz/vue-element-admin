@@ -128,6 +128,14 @@ async function chartListStudent(query) {
   return { list }
 }
 
+async function passRateStudent(query) {
+  console.log(query)
+  const studentSql=`select concat((select count(*) from \`result\` where Math >= 60 and TestTime=1)/(select count(*) from \`result\` where TestTime=1 and Math is not null)*100,'%') as Math`
+  const passResult = await db.querySql(studentSql)
+  console.log(passResult)
+  return passResult[0]
+}
+
 function updateStudent(updateKey){
   const id=updateKey["StudentId"]
   const Chinese=updateKey["Chinese"]
@@ -143,7 +151,7 @@ function updateStudent(updateKey){
   const Composite=updateKey["Composite"]
   let studentSql = `update result set Chinese = ${Chinese}, Math=${Math}, English=${English}, Physical=${Physical}, Chemistry=${Chemistry}, History=${History}, Politics=${Politics}, Biology=${Biology}, Geographic=${Geographic}, Sport=${Sport}, Composite=${Composite} where StudentId = ${id} `
   // console.log(studentSql)
-  return new Promise(async (resolve, reject) => {
+  return new Promise(async (resolve) => {
     await db.querySql(studentSql)
     resolve()
   }).catch(reason => {
@@ -157,7 +165,8 @@ module.exports = {
   insertStudent,
   updateStudent,
   chartListStudent,
-  listRankStudent
+  listRankStudent,
+  passRateStudent
 }
 //testData
 // booksql = 'select count(Chinese) as `语文` from studentresult where Chinese between 90 and 100'

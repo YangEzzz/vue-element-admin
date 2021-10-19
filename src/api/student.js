@@ -46,3 +46,11 @@ export function updateStudent(student) {
     data: student
   }))
 }
+
+export function passRate(params) {
+  return request(({
+    url: '/student/pass',
+    method: 'get',
+    params
+  }))
+}

@@ -1,26 +1,6 @@
 <template>
   <div class="app-container" style="width: 100%;text-align: center">
     <div class="filter-container" style="display: inline-block;align-items: center">
-      <!--      <el-input-->
-      <!--        v-model="listQuery.Name"-->
-      <!--        placeholder="学生姓名"-->
-      <!--        style="width: 200px"-->
-      <!--        class="filter-item"-->
-      <!--        clearable-->
-      <!--        @keyup.enter.native="handleFilter"-->
-      <!--        @clear="handleFilter"-->
-      <!--        @blur="handleFilter"-->
-      <!--      />-->
-      <!--      <el-input-->
-      <!--        v-model="listQuery.StudentId"-->
-      <!--        placeholder="座号"-->
-      <!--        style="width: 200px"-->
-      <!--        class="filter-item"-->
-      <!--        clearable-->
-      <!--        @keyup.enter.native="handleFilter"-->
-      <!--        @clear="handleFilter"-->
-      <!--        @blur="handleFilter"-->
-      <!--      />-->
       <el-select
         v-model="listQuery.subject"
         placeholder="选择科目"

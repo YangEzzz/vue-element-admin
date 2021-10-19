@@ -94,4 +94,14 @@ router.post('/update', function(
   })
 })
 
+router.get('/pass', function(req, res, next) {
+  studentService.passRateStudent(req.query)
+    .then((passResult) => {
+      // console.log('result', passResult)
+      new Result(passResult, '及格率获取成功').success(res)
+    }).catch(err => {
+      next(boom.badImplementation(err))
+    })
+})
+
 module.exports = router

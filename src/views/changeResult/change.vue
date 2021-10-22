@@ -18,7 +18,16 @@ export default {
     console.log(this.$route.query.Student)
     if (!this.$route.query.Student) {
       this.isData = false
-      this.$message.error('请在个人成绩中选择要修改的学生')
+      this.$message({
+        duration: 1000,
+        type: 'error',
+        message: '请在个人成绩中选择要修改的学生'
+      })
+      setTimeout(() => {
+        this.$router.push({
+          path: `/Result/PersonalResult`
+        })
+      }, 1000)
     }
   }
 }

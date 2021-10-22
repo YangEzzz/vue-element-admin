@@ -121,19 +121,43 @@ async function chartListStudent(query) {
   const list = []
   for(const item of range){
     let booksqlTotal=`${studentSql1}${item}${studentSql2}${item}${studentSql3}${item}${studentSql4}${item}${studentSql5}${item}${studentSql6}`
-    console.log('sqlTestNight',booksqlTotal)
+    // console.log('sqlTestNight',booksqlTotal)
     list.push((await db.querySql(booksqlTotal))[0])
   }
-   console.log('list',list)// list是一个数组，数组中的每一个元素是一个对象，对象里是查询出来的键值对
+   // console.log('list',list)// list是一个数组，数组中的每一个元素是一个对象，对象里是查询出来的键值对
   return { list }
 }
 
 async function passRateStudent(query) {
   console.log(query)
-  const studentSql=`select concat((select count(*) from \`result\` where Math >= 60 and TestTime=1)/(select count(*) from \`result\` where TestTime=1 and Math is not null)*100,'%') as Math`
-  const passResult = await db.querySql(studentSql)
-  console.log(passResult)
-  return passResult[0]
+  const classes=query['classes']
+  const subject=query['subject']
+  const good=(subject==='Chinese'||subject==='Math'||subject==='English')?96:80
+  const pass=(subject==='Chinese'||subject==='Math'||subject==='English')?72:60
+  console.log(subject,classes,good)
+  let studentSqlGood=``
+  let studentSqlPass=``
+  let studentSqlNot=``
+  // noinspection EqualityComparisonWithCoercionJS
+  if(classes==5){
+    studentSqlGood=`select count(*) as Good from studentresult where ${subject} >= ${good} and TestTime=1`
+    studentSqlPass=`select count(*) as Pass from studentresult where ${subject} < ${good} and ${subject} >=${pass} and TestTime=1`
+    studentSqlNot=`select count(*) as NotPass from studentresult where ${subject} < ${pass} and TestTime=1`
+  }
+  else{
+    studentSqlGood=`select count(*) as Good from studentresult where ${subject} >= ${good} and Class=${classes} and TestTime=1`
+    studentSqlPass=`select count(*) as Pass from studentresult where ${subject} < ${good} and ${subject} >=${pass} and Class=${classes} and TestTime=1`
+    studentSqlNot=`select count(*) as NotPass from studentresult where ${subject} < ${pass} and Class=${classes} and TestTime=1`
+  }
+  console.log(studentSqlGood,studentSqlPass,studentSqlNot)
+  // const studentSql=`select concat((select count(*) from \`result\` where Math >= 60 and TestTime=1)/(select count(*) from \`result\` where TestTime=1 and Math is not null)*100,'%') as Math`
+  const passResultGood = await db.querySql(studentSqlGood)
+  const passResultPass = await db.querySql(studentSqlPass)
+  const passResultNot = await db.querySql(studentSqlNot)
+  console.log([passResultGood[0],passResultPass[0],passResultNot[0]])
+  return { ...passResultGood[0], ...passResultPass[0], ...passResultNot[0] }
+//  选择班级与科目显示饼状图
+//  饼状图含有及格，优秀，不及格人数，
 }
 
 function updateStudent(updateKey){

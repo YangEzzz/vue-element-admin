@@ -9,9 +9,18 @@
     >
       <el-option v-for="item in ChartCategoryList" :key="item.value" :label="item.label" :value="item.value" />
     </el-select>
+    <el-select v-model="valueGrade" placeholder="请选择">
+      <el-option
+        v-for="item in grade"
+        :key="item.value"
+        :label="item.label"
+        :value="item.value"
+      />
+    </el-select>
     <v-chart :option="options" style="height: 440px;width: 100%;margin: auto" autoresize :loading="load" />
   </div>
 </template>
+
 <style>
 body {
   overscroll-behavior-x: auto;
@@ -19,6 +28,7 @@ body {
 </style>
 <script>
 import { chartListStudent } from '@/api/student'
+import { mapState } from 'vuex'
 
 export default {
   data() {
@@ -68,6 +78,19 @@ export default {
         }
       },
       subject: 'Chinese',
+      grade: [{
+        value: '1',
+        label: '初一'
+      }, {
+        value: '2',
+        label: '初二'
+      }, {
+        value: '3',
+        label: '初三'
+      }],
+      valueGrade: '1',
+      valueClass: '1',
+      categoryList: [],
       list: [],
       ChartCategoryList: [{
         value: 'Chinese',
@@ -100,12 +123,16 @@ export default {
       ]
     }
   },
+  computed: {
+    ...mapState({ views: state => state.tagsView })
+  },
   mounted() {
     this.getList()
+    console.log('views', this.views)
   },
   methods: {
     getList() {
-      chartListStudent(this.subject).then(response => {
+      chartListStudent([this.subject, this.valueGrade]).then(response => {
         console.log(response)
         const { list } = response.data
         const Class = ['一班', '二班', '三班', '四班', '全级']

@@ -9,6 +9,14 @@
       >
         <el-option v-for="item in rankCategoryList" :key="item.value" :label="item.label" :value="item.value" />
       </el-select>
+      <el-select v-model="valueGrade" clearable class="filter-item" placeholder="请选择" @change="handleFilter();handleChange()">
+        <el-option
+          v-for="item in grade"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        />
+      </el-select>
       <el-select
         v-model="listQuery.category"
         placeholder="选择班级"
@@ -214,6 +222,17 @@ export default {
   data() {
     return {
       rankSubject: { subject: 'Chinese' },
+      grade: [{
+        value: '1',
+        label: '初一'
+      }, {
+        value: '2',
+        label: '初二'
+      }, {
+        value: '3',
+        label: '初三'
+      }],
+      valueGrade: '1',
       rankCategoryList: [{
         value: 'Chinese',
         label: '语文'
@@ -265,7 +284,7 @@ export default {
   },
   mounted() {
     this.getList()
-    this.getCategoryList()
+    this.getCategoryList(this.valueGrade)
   },
   methods: {
     parseQuery() {
@@ -274,6 +293,9 @@ export default {
         pageSize: 20
       }
       this.listQuery = { ...listQuery, ...this.listQuery, ...this.rankSubject }
+    },
+    handleChange() {
+      this.listQuery.category = null
     },
     // wrapperKeyWord(k, v) {
     //   function highlight(value) {
@@ -287,6 +309,7 @@ export default {
     // },
     getList() {
       this.listLoading = true
+      this.listQuery.grade = this.valueGrade
       listRankStudent(this.listQuery).then(response => {
         const { list, count } = response.data
         this.list = list
@@ -298,8 +321,8 @@ export default {
         // })
       })
     },
-    getCategoryList() {
-      getCategory().then(response => {
+    getCategoryList(grade) {
+      getCategory(grade).then(response => {
         this.categoryList = response.data
         console.log(this.categoryList)
       })
@@ -307,6 +330,7 @@ export default {
     handleFilter() {
       console.log('handleFilter', this.listQuery, this.rankSubject)
       this.getList()
+      this.getCategoryList(this.valueGrade)
     },
     changeShowNumber() {
       // eslint-disable-next-line no-undef

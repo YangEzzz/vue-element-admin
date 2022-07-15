@@ -1,5 +1,5 @@
-const jwt = require('express-jwt');
-const { PRIVATE_KEY } = require('../utils/constant');
+const jwt = require('express-jwt')
+const { PRIVATE_KEY } = require('../utils/constant')
 
 module.exports = jwt({
   secret: PRIVATE_KEY,
@@ -9,6 +9,6 @@ module.exports = jwt({
   path: [
     '/',
     '/user/login'
-  ], // 设置 jwt 认证白名单
+  ] // 设置 jwt 认证白名单
 })
 

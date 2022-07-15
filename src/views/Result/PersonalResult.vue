@@ -21,6 +21,14 @@
         @clear="handleFilter"
         @blur="handleFilter"
       />
+      <el-select v-model="valueGrade" class="filter-item" placeholder="请选择" @change="handleFilter();handleChange()">
+        <el-option
+          v-for="item in grade"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        />
+      </el-select>
       <el-select
         v-model="listQuery.category"
         placeholder="选择班级"
@@ -30,16 +38,16 @@
       >
         <el-option v-for="item in categoryList" :key="item.value" :label="item.label" :value="item.num" />
       </el-select>
-      <el-button
-        v-waves
-        class="filter-item"
-        type="primary"
-        icon="el-icon-search"
-        style="margin-left: 10px"
-        @click="handleFilter"
-      >
-        查询
-      </el-button>
+      <!--      <el-button-->
+      <!--        v-waves-->
+      <!--        class="filter-item"-->
+      <!--        type="primary"-->
+      <!--        icon="el-icon-search"-->
+      <!--        style="margin-left: 10px"-->
+      <!--        @click="handleFilter"-->
+      <!--      >-->
+      <!--        查询-->
+      <!--      </el-button>-->
       <el-button
         class="filter-item"
         type="primary"
@@ -49,14 +57,14 @@
       >
         新增
       </el-button>
-      <el-checkbox
-        v-model="showNumber"
-        class="filter-item"
-        style="margin-left: 5px"
-        @change="changeShowNumber"
-      >
-        显示年级
-      </el-checkbox>
+      <!--      <el-checkbox-->
+      <!--        v-model="showNumber"-->
+      <!--        class="filter-item"-->
+      <!--        style="margin-left: 5px"-->
+      <!--        @change="changeShowNumber"-->
+      <!--      >-->
+      <!--        显示年级-->
+      <!--      </el-checkbox>-->
     </div>
     <el-table
       :key="tableKey"
@@ -84,16 +92,16 @@
           <span v-html="NameWrapper" />
         </template>
       </el-table-column>
-      <el-table-column
-        v-if="showNumber"
-        label="年级"
-        width="70"
-        align="center"
-      >
-        <template slot-scope="{row:{Grade}}">
-          <span>{{ Grade }}</span>
-        </template>
-      </el-table-column>
+      <!--      <el-table-column-->
+      <!--        v-if="showNumber"-->
+      <!--        label="年级"-->
+      <!--        width="70"-->
+      <!--        align="center"-->
+      <!--      >-->
+      <!--        <template slot-scope="{row:{Grade}}">-->
+      <!--          <span>{{ Grade }}</span>-->
+      <!--        </template>-->
+      <!--      </el-table-column>-->
       <el-table-column
         label="班级"
         width="70"
@@ -261,7 +269,18 @@ export default {
       categoryList: [],
       tableKey: 0,
       list: [],
-      total: 0
+      total: 0,
+      grade: [{
+        value: '1',
+        label: '初一'
+      }, {
+        value: '2',
+        label: '初二'
+      }, {
+        value: '3',
+        label: '初三'
+      }],
+      valueGrade: '1'
     }
   },
   created() {
@@ -269,7 +288,7 @@ export default {
   },
   mounted() {
     this.getList()
-    this.getCategoryList()
+    this.getCategoryList(this.valueGrade)
   },
   methods: {
     parseQuery() {
@@ -279,6 +298,9 @@ export default {
         sort: '+StudentId'
       }
       this.listQuery = { ...listQuery, ...this.listQuery }
+    },
+    handleChange() {
+      this.listQuery.category = null
     },
     sortChange(data) {
       console.log('sortChange', data)
@@ -305,6 +327,7 @@ export default {
     },
     getList() {
       this.listLoading = true
+      this.listQuery.grade = this.valueGrade
       listStudent(this.listQuery).then(response => {
         const { list, count } = response.data
         this.list = list
@@ -315,8 +338,8 @@ export default {
         })
       })
     },
-    getCategoryList() {
-      getCategory().then(response => {
+    getCategoryList(grade) {
+      getCategory(grade).then(response => {
         this.categoryList = response.data
         console.log(this.categoryList)
       })
@@ -324,6 +347,7 @@ export default {
     handleFilter() {
       console.log('handleFilter', this.listQuery.category)
       this.getList()
+      this.getCategoryList(this.valueGrade)
     },
     handleCreate() {
       this.$router.push('/changeResult/create')

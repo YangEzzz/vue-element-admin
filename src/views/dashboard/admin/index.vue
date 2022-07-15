@@ -1,18 +1,10 @@
 <template>
   <div>
-    <div class="roleText1">
-      <span v-for="item in roles" :key="item" style="line-height: 150px" class="pan-info-roles">你的角色是：{{ item }}</span>
-    </div>
-    <div class="roleText2">
-      <span style="line-height: 150px">功能介绍</span>
-    </div>
-    <div id="footer">
-      <ul>
-        <li>
-          @2021 YangEzzz.All rights Reserved
-        </li>
-      </ul>
-    </div>
+    <el-carousel indicator-position="inside" height="525px">
+      <el-carousel-item v-for="(item,index) in homePic" :key="index">
+        <h3>{{ item }}</h3>
+      </el-carousel-item>
+    </el-carousel>
   </div>
 </template>
 <!--<template>-->
@@ -58,47 +50,15 @@
 <!--</template>-->
 
 <script>
-import GithubCorner from '@/components/GithubCorner'
-import PanelGroup from './components/PanelGroup'
-import LineChart from './components/LineChart'
-import RaddarChart from './components/RaddarChart'
-import PieChart from './components/PieChart'
-import BarChart from './components/BarChart'
-import TransactionTable from './components/TransactionTable'
-import TodoList from './components/TodoList'
-import BoxCard from './components/BoxCard'
 import { mapGetters } from 'vuex'
-
-const lineChartData = {
-  newVisitis: {
-    expectedData: [100, 120, 161, 134, 105, 160, 165],
-    actualData: [120, 82, 91, 154, 162, 140, 145]
-  },
-  messages: {
-    expectedData: [200, 192, 120, 144, 160, 130, 140],
-    actualData: [180, 160, 151, 106, 145, 150, 130]
-  },
-  purchases: {
-    expectedData: [80, 100, 121, 104, 105, 90, 100],
-    actualData: [120, 90, 100, 138, 142, 130, 130]
-  },
-  shoppings: {
-    expectedData: [130, 140, 141, 142, 145, 150, 160],
-    actualData: [120, 82, 91, 154, 162, 140, 130]
-  }
-}/*eslint-disable*/
 export default {
-  name: 'DashboardAdmin',
-  components: {
-    GithubCorner,
-    PanelGroup,
-    LineChart,
-    RaddarChart,
-    PieChart,
-    BarChart,
-    TransactionTable,
-    TodoList,
-    BoxCard
+  name: 'DashboardEditor',
+  data() {
+    return {
+      visitPerson: 0,
+      homePic: [],
+      student: 0
+    }
   },
   computed: {
     ...mapGetters([
@@ -107,77 +67,84 @@ export default {
       'roles'
     ])
   },
-  data() {
-    return {
-      currentRole: 'adminDashboard',
-      lineChartData: lineChartData.newVisitis
-    }
+  mounted() {
+    this.test()
+    this.pic()
+    console.log(this.name, this.roles[0], this.avatar)
   },
   methods: {
-    handleSetLineChartData(type) {
-      this.lineChartData = lineChartData[type]
+    test() {
+      const caution = false
+      function setCookie(name, value, expires, path, domain, secure) {
+        const curCookie = name + '=' + escape(value) +
+          ((expires) ? ';expires=' + expires.toGMTString() : '') +
+          ((path) ? '; path=' + path : '') +
+          ((domain) ? '; domain=' + domain : '') +
+          ((secure) ? ';secure' : '')
+        if (!caution || (name + '=' + escape(value)).length <= 4000) {
+          document.cookie = curCookie
+        } else if (confirm('Cookie exceeds 4KB and will be cut!')) {
+          document.cookie = curCookie
+        }
+      }
+      function getCookie(name) {
+        const prefix = name + '='
+        const cookieStartIndex = document.cookie.indexOf(prefix)
+        if (cookieStartIndex === -1) {
+          return null
+        }
+        let cookieEndIndex = document.cookie.indexOf(';', cookieStartIndex + prefix.length)
+        if (cookieEndIndex === -1) {
+          cookieEndIndex = document.cookie.length
+        }
+        return unescape(document.cookie.substring(cookieStartIndex + prefix.length, cookieEndIndex))
+      }
+      function fixDate(date) {
+        const base = new Date(0)
+        const skew = base.getTime()
+        if (skew > 0) {
+          date.setTime(date.getTime() - skew)
+        }
+      }
+
+      const now = new Date()
+      fixDate(now)
+      now.setTime(now.getTime() + 365 * 24 * 60 * 60 * 1000)
+      let visits = getCookie('counter')
+      if (!visits) { visits = 1 } else { visits = parseInt(visits) + 1 }
+      setCookie('counter', visits, now)
+      this.visitPerson = visits
+    },
+    pic() {
+      this.homePic.push(`您的身份为：${this.roles[0] === 'editor' ? '查看者' : '管理员'}`)
+      this.homePic.push(`学生总数：${this.student}`)
+      this.homePic.push(`访问总量：${this.visitPerson}`)
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.roleText1 {
-  border: #8887 outset 3px ;
-  border-radius: 5px;
+.el-carousel__item h3 {
+  color: black;
+  font-size: 48px;
+  opacity: 0.75;
+  line-height: 525px;
+  margin: auto;
   text-align: center;
-  position: absolute;
-  left: 20%;
-  top: 20px;
-  height: 150px;
-  width: 200px;
-}
-.roleText1:hover {
-  box-shadow: 6px 6px 5px #8888;
+  text-shadow:
+    0 1px 0 #c0c0c0,
+    0 2px 0 #b0b0b0,
+    0 3px 0 #a0a0a0,
+    0 4px 0 #1a1919,
+    0 5px 10px rgba(0, 0, 0, 0.6);
 }
 
-.roleText2 {
-  border: #8887 outset 3px ;
-  border-radius: 5px;
-  text-align: center;
-  position: absolute;
-  right: 20%;
-  top: 20px;
-  height: 150px;
-  width: 200px;
-}
-.roleText2:hover {
-  box-shadow: 6px 6px 5px #8888;
-}
-#footer {
-  clear: both;
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  font-size: 1px;
-}
-.dashboard-editor-container {
-  padding: 32px;
-  background-color: rgb(240, 242, 245);
-  position: relative;
-
-  .github-corner {
-    position: absolute;
-    top: 0px;
-    border: 0;
-    right: 0;
-  }
-
-  .chart-wrapper {
-    background: #fff;
-    padding: 16px 16px 0;
-    margin-bottom: 32px;
-  }
+.el-carousel__item:nth-child(2n) {
+  background-color: #99a9bf;
 }
 
-@media (max-width:1024px) {
-  .chart-wrapper {
-    padding: 8px;
-  }
+.el-carousel__item:nth-child(2n+1) {
+  background-color: #d3dce6;
 }
 </style>

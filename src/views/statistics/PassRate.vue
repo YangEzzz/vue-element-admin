@@ -5,24 +5,40 @@
       placeholder="选择科目"
       class="filter-item"
       style="width:20%;height: auto;margin-left: 20px;margin-top: 20px;z-index: 1"
-      @change="getPassRate"
+      @change="handleFilter"
     >
       <el-option v-for="item in ChartCategoryList" :key="item.value" :label="item.label" :value="item.value" />
     </el-select>
     <el-select
-      v-model="classes"
+      v-model="category"
       placeholder="选择班级"
+      clearable
       class="filter-item"
       style="width:20%;display: block;margin-left: 20px;margin-top: 20px;z-index: 1;"
-      @change="getPassRate"
+      @change="handleFilter"
     >
-      <el-option v-for="item in ClassList" :key="item.value" :label="item.label" :value="item.value" />
+      <el-option v-for="item in categoryList" :key="item.value" :label="item.label" :value="item.value" />
+    </el-select>
+    <el-select
+      v-model="valueGrade"
+      style="width:20%;display: block;margin-left: 20px;margin-top: 20px;z-index: 1;"
+      class="filter-item"
+      placeholder="请选择"
+      @change="handleFilter();handleChange()"
+    >
+      <el-option
+        v-for="item in grade"
+        :key="item.value"
+        :label="item.label"
+        :value="item.value"
+      />
     </el-select>
     <v-chart :option="option" style="height: 430px;width: 100%;position:absolute;bottom: 50px;z-index: 0" autoresize :loading="load" />
   </div>
 </template>
 <script>
-import { passRate } from '@/api/student'
+import { getCategory, passRate } from '@/api/student'
+import { mapState } from 'vuex'
 
 export default {
   data() {
@@ -31,6 +47,19 @@ export default {
       PassRate: '',
       NotPassRate: '',
       load: true,
+      grade: [{
+        value: '1',
+        label: '初一'
+      }, {
+        value: '2',
+        label: '初二'
+      }, {
+        value: '3',
+        label: '初三'
+      }],
+      categoryList: [],
+      valueGrade: '1',
+      category: '',
       ChartCategoryList: [{
         value: 'Chinese',
         label: '语文'
@@ -58,6 +87,9 @@ export default {
       }, {
         value: 'Geographic',
         label: '地理'
+      }, {
+        value: 'Total',
+        label: '总分'
       }
       ],
       subject: 'Chinese',
@@ -74,7 +106,9 @@ export default {
       }, {
         value: '4',
         label: '四班'
-      }, { value: '5', label: '全级' }],
+      }, {
+        value: '5', label: '全级'
+      }],
       option: {
         title: {
           text: '',
@@ -124,20 +158,40 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapState({ views: state => state.tagsView })
+  },
   mounted() {
     this.getPassRate()
+    this.getCategoryList(this.valueGrade)
+    console.log('views', this.views)
   },
   methods: {
+    handleChange() {
+      this.category = ''
+    },
+    handleFilter() {
+      this.getPassRate()
+      this.getCategoryList(this.valueGrade)
+    },
+    getCategoryList(grade) {
+      getCategory(grade).then(response => {
+        this.categoryList = response.data
+        console.log(this.categoryList)
+      })
+    },
     getPassRate() {
-      const cl = this.classes
+      const cl = this.category
       const sub = this.subject
-      passRate({ classes: cl, subject: sub }).then(response => {
+      const grade = this.valueGrade
+      passRate({ classes: cl, subject: sub, grade: grade }).then(response => {
         const passResult = response.data
         const {
           Good,
           Pass,
           NotPass
         } = passResult
+        console.log(passResult)
         this.option.series[0].data[0].value = parseInt(Good)
         this.option.series[0].data[1].value = parseInt(Pass)
         this.option.series[0].data[2].value = parseInt(NotPass)

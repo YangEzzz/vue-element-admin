@@ -13,7 +13,7 @@ module.exports = {
   debug: true,
   PWD_SALT: 'YangEzzz',
   PRIVATE_KEY: 'YangEzzz',
-  JWT_EXPIRED: 60 * 60,
+  JWT_EXPIRED: 60 * 60 * 24,
   UPLOAD_PATH,
   UPLOAD_URL,
   MIME_TYPE_EXCEL: 'application/vnd.ms-excel'

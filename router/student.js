@@ -43,7 +43,8 @@ router.post('/create', function(req, res, next) {
 })
 
 router.get('/category', function(req, res, next) {
-  studentService.getCategory().then(category => {
+  console.log('query', req.query)
+  studentService.getCategory(req.query).then(category => {
     new Result(category, '获取分类成功').success(res)
   }).catch(err => {
     next(boom.badImplementation(err))
@@ -75,6 +76,7 @@ router.get('/listRank', function(
 router.get('/chartList', function(
   req,
   res, next) {
+  console.log('req1', req.query)
   studentService.chartListStudent(req.query)
     .then(({ list }) => {
       console.log('req', req.query)
@@ -97,11 +99,32 @@ router.post('/update', function(
 router.get('/pass', function(req, res, next) {
   studentService.passRateStudent(req.query)
     .then((passResult) => {
-      // console.log('result', req.query)
+      // console.log('result', passResult)
       new Result(passResult, '及格率获取成功').success(res)
     }).catch(err => {
       next(boom.badImplementation(err))
     })
+})
+
+router.post('/advantage', function(req,
+  res,
+  next) {
+  console.log('tets', req.body)
+  studentService.advantage(req.body)
+    .then((list) => {
+      console.log('aaa', list)
+      new Result(list, '平均分获取成功').success(res)
+    }).catch(err => {
+      next(boom.badImplementation(err))
+    })
+})
+
+router.get('/getSum', function(req, res, next) {
+  studentService.getSum().then(sum => {
+    new Result(sum, '总数获取成功').success(res)
+  }).catch(err => {
+    next(boom.badImplementation(err))
+  })
 })
 
 module.exports = router

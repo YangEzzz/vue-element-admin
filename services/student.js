@@ -22,8 +22,9 @@ function insertStudent(student) {
   })
 }
 
-async function getCategory() {
-  const sql = 'select distinct Class from category'
+async function getCategory(grade) {
+  console.log(grade)
+  const sql = `select distinct Class from student where Grade = ${grade['0']}`
   const result = await db.querySql(sql)
   const categoryList = []
   result.forEach(item => {
@@ -40,6 +41,7 @@ async function listStudent(query) {
   console.log(query)
   const {
     category,
+    grade,
     Name,
     sort,
     StudentId,
@@ -52,6 +54,7 @@ async function listStudent(query) {
   Name && (where = db.andLike(where, 'Name', Name))
   StudentId && (where = db.and(where, 'StudentId', StudentId))
   category && (where = db.and(where, 'Class', category))
+  grade && (where = db.and(where, 'Grade', grade))
   if (where !== 'where') {
     booksql = `${booksql} ${where}`
   }
@@ -68,8 +71,12 @@ async function listStudent(query) {
   const count = await db.querySql(countSql)
   booksql = `${booksql} limit ${pageSize} offset ${offset}`
   const list = await db.querySql(booksql)
-  console.log('sqlTest',booksql)
+  console.log('sqlTest',booksql,grade)
   return { list, count: count[0].count, page, pageSize }
+}
+
+async function getSum(){
+  return await db.querySql('select count(*) from studentresult')
 }
 
 async function listRankStudent(query) {
@@ -77,6 +84,7 @@ async function listRankStudent(query) {
   const {
     category,
     subject,
+    grade,
     page = 1,
     pageSize = 20
   } = query
@@ -86,6 +94,7 @@ async function listRankStudent(query) {
   // Name && (where = db.andLike(where, 'Name', Name))
   // StudentId && (where = db.and(where, 'StudentId', StudentId))
    category && (where = db.and(where, 'Class', category))
+  grade && (where = db.and(where, 'Grade', grade))
   if (where !== 'where') {
     studentSql = `${studentSql} ${where}`
   }
@@ -132,22 +141,41 @@ async function passRateStudent(query) {
   console.log(query)
   const classes=query['classes']
   const subject=query['subject']
-  const good=(subject==='Chinese'||subject==='Math'||subject==='English')?96:80
-  const pass=(subject==='Chinese'||subject==='Math'||subject==='English')?72:60
-  console.log(subject,classes,good)
+  const grade=query['grade']
+  let good
+  let pass
+  if(subject==='Total') {
+    if(grade==='3') {
+      good = 608
+      pass = 456
+    }
+    else if(grade==='2'){
+      good = 528
+      pass=396
+    }
+    else if(grade==='1'){
+      good = 448
+      pass=336
+    }
+  }
+  else{
+    good=(subject==='Chinese'||subject==='Math'||subject==='English')?96:80
+    pass=(subject==='Chinese'||subject==='Math'||subject==='English')?72:60
+  }
+  console.log(subject,classes,good,grade)
   let studentSqlGood=``
   let studentSqlPass=``
   let studentSqlNot=``
   // noinspection EqualityComparisonWithCoercionJS
-  if(classes==5){
-    studentSqlGood=`select count(*) as Good from studentresult where ${subject} >= ${good} and TestTime=1`
-    studentSqlPass=`select count(*) as Pass from studentresult where ${subject} < ${good} and ${subject} >=${pass} and TestTime=1`
-    studentSqlNot=`select count(*) as NotPass from studentresult where ${subject} < ${pass} and TestTime=1`
+  if(classes===""){
+    studentSqlGood=`select count(*) as Good from studentresult where ${subject} >= ${good} and Grade=${grade} and TestTime=1`
+    studentSqlPass=`select count(*) as Pass from studentresult where ${subject} < ${good} and Grade=${grade} and ${subject} >=${pass} and TestTime=1`
+    studentSqlNot=`select count(*) as NotPass from studentresult where ${subject} < ${pass} and Grade=${grade} and TestTime=1`
   }
   else{
-    studentSqlGood=`select count(*) as Good from studentresult where ${subject} >= ${good} and Class=${classes} and TestTime=1`
-    studentSqlPass=`select count(*) as Pass from studentresult where ${subject} < ${good} and ${subject} >=${pass} and Class=${classes} and TestTime=1`
-    studentSqlNot=`select count(*) as NotPass from studentresult where ${subject} < ${pass} and Class=${classes} and TestTime=1`
+    studentSqlGood=`select count(*) as Good from studentresult where ${subject} >= ${good} and Grade=${grade} and Class=${classes} and TestTime=1`
+    studentSqlPass=`select count(*) as Pass from studentresult where ${subject} < ${good} and ${subject} >=${pass} and Grade=${grade} and Class=${classes} and TestTime=1`
+    studentSqlNot=`select count(*) as NotPass from studentresult where ${subject} < ${pass} and Grade=${grade} and Class=${classes} and TestTime=1`
   }
   console.log(studentSqlGood,studentSqlPass,studentSqlNot)
   // const studentSql=`select concat((select count(*) from \`result\` where Math >= 60 and TestTime=1)/(select count(*) from \`result\` where TestTime=1 and Math is not null)*100,'%') as Math`
@@ -183,6 +211,31 @@ function updateStudent(updateKey){
   })
 }
 
+async function advantage(list){
+  const {subject,classNum,gradeNum}=list
+  const subjectAll=['Chinese','Math','English','Politics','History','Physical','Chemistry']
+  let resultAll=[]
+  let resultSqlAll=[]
+  console.log('sqlList', classNum, gradeNum)
+  if(classNum===""){
+    resultSqlAll=subjectAll.map((subject1)=>{
+      return `SELECT sum(${subject1})/count(${subject1}) as advantage FROM studentresult where grade=${gradeNum};`
+    })
+  }
+  else
+    resultSqlAll=subjectAll.map((subject1)=>{
+      return `SELECT sum(${subject1})/count(${subject1}) as advantage FROM studentresult where class=${classNum} and grade=${gradeNum};`
+    })
+  console.log(resultSqlAll)
+  for(let i=0;i<resultSqlAll.length;i++){
+    resultAll.push((await db.querySql(resultSqlAll[i]))[0])
+  }
+  console.log(resultAll)
+  // let advantageSql = `SELECT sum(${subject})/count(${subject}) as advantage FROM studentresult where class=${classNum} and grade=${gradeNum};`
+  return resultAll
+
+}
+
 module.exports = {
   getCategory,
   listStudent,
@@ -190,7 +243,9 @@ module.exports = {
   updateStudent,
   chartListStudent,
   listRankStudent,
-  passRateStudent
+  passRateStudent,
+  advantage,
+  getSum
 }
 //testData
 // booksql = 'select count(Chinese) as `语文` from studentresult where Chinese between 90 and 100'

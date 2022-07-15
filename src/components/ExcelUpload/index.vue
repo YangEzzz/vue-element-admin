@@ -17,15 +17,6 @@
       accept=".xlsx,.xls"
       class="image-upload"
     >
-      <!--      :limit="limitNum"-->
-      <!--      :auto-upload="false"-->
-      <!--      accept=".xlsx"-->
-      <!--      :before-upload="beforeUploadFile"-->
-      <!--      :on-change="fileChange"-->
-      <!--      :on-exceed="exceedFile"-->
-      <!--      :on-success="handleSuccess"-->
-      <!--      :on-error="handleError"-->
-      <!--      :file-list="fileList"-->
       <i class="el-icon-upload" />
       <div v-if="fileList.length === 0" class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
       <div v-else class="el-upload__text">图书已上传</div>

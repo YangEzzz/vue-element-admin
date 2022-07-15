@@ -35,24 +35,6 @@ class Student {
 
   createStudentFromData(data) {
     this.data=data
-    //   this[i].StudentId=item.StudentId
-    //   this.Grade=data.Grade
-    //   this.Class=data.Class
-    //   this.Name=data.name
-    //   this.Chinese=data.Chinese
-    //   this.Math=data.Math
-    //   this.English=data.English
-    //   this.Physical=data.Physical
-    //   this.Chemistry=data.Chemistry
-    //   this.History=data.History
-    //   this.Politics=data.Politics
-    //   this.Biology=data.Biology
-    //   this.Geographic=data.Geographic
-    //   this.Sport=data.Sport
-    //   this.Composite=data.Composite
-    //   this.Total=data.Total
-    //   this.TestTime=data.TestTime
-    // }
     console.log('test2')
   }
 

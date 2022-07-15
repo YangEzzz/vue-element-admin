@@ -1,9 +1,10 @@
 import request from '@/utils/request'
 
-export function getCategory() {
+export function getCategory(params) {
   return request({
     url: '/student/category',
-    method: 'get'
+    method: 'get',
+    params
   })
 }
 
@@ -52,5 +53,20 @@ export function passRate(params) {
     url: '/student/pass',
     method: 'get',
     params
+  }))
+}
+
+export function advantageResult(ad) {
+  return request(({
+    url: '/student/advantage',
+    method: 'post',
+    data: ad
+  }))
+}
+
+export function getSum() {
+  return request(({
+    url: '/student/getSum',
+    method: 'get'
   }))
 }

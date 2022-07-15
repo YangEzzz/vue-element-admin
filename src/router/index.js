@@ -78,7 +78,7 @@ export const asyncRoutes = [
   {
     path: '/AdvangeResult',
     component: Layout,
-    name: '平均成绩',
+    name: '平均成绩1',
     redirect: '/AdvangeResult/ClassAdv',
     // eslint-disable-next-line no-sequences
     children: [
